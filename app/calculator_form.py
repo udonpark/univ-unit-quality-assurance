@@ -19,8 +19,12 @@ class Calculator_Form(FlaskForm):
     def validate_BatteryPackCapacity(self, field):
         if field.data is None:
             raise ValidationError('Field data is none')
+        elif not (isinstance(field.data, int) or isinstance(field.data, float)):
+            raise ValueError("Field data must be a numeric value")
         elif field.data == '':
             raise ValueError("cannot fetch data")
+        elif field.data <= 0:
+            raise ValueError("Field data must be a positive value")
 
     # validate initial charge here
     def validate_InitialCharge(self, field):
@@ -28,10 +32,29 @@ class Calculator_Form(FlaskForm):
         # you may modify this part of the code
         if field.data > self.FinalCharge.data:
             raise ValueError("Initial charge data error")
+        elif field.data is None:
+            raise ValidationError("Field data is none")
+        elif not (isinstance(field.data, int)):  # for ISoC, we only accept integers and not float
+            raise ValueError("Field data must be an integer value")
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
+        elif field.data < 0:
+            raise ValueError("Field data must be >= 0")
+        elif field.data > 100:
+            raise ValueError("Field data must be <= 100")
 
     # validate final charge here
     def validate_FinalCharge(self, field):
-        pass
+        if field.data is None:
+            raise ValidationError("Field data is none")
+        elif not isinstance(field.data, int):  # for FSoC, we also accept integer only as in As1.
+            raise ValueError("Field data must be an integer value")
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
+        elif field.data < 0:
+            raise ValueError("Field data must be >= 0")
+        elif field.data > 100:
+            raise ValueError("Field data must be <= 100")
 
     # validate start date here
     def validate_StartDate(self, field):
