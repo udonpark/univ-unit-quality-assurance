@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, TimeField
 from wtforms.validators import DataRequired, ValidationError, Optional
-
+import datetime
 # validation for form inputs
 class Calculator_Form(FlaskForm):
     # this variable name needs to match with the input attribute name in the html file
@@ -9,7 +9,7 @@ class Calculator_Form(FlaskForm):
     BatteryPackCapacity = StringField("Battery Pack Capacity", [DataRequired()])
     InitialCharge = StringField("Initial Charge", [DataRequired()])
     FinalCharge = StringField("Final Charge", [DataRequired()])
-    StartDate = DateField("Start Date", [DataRequired("Data is missing or format is incorrect")], format='%d/%m/%Y')
+    StartDate = DateField("Start Date", [DataRequired()], format='%Y-%m-%d') #[DataRequired("Data is missing or format is incorrect")], format='%d/%m/%Y'
     StartTime = TimeField("Start Time", [DataRequired("Data is missing or format is incorrect")], format='%H:%M')
     ChargerConfiguration = StringField("Charger Configuration", [DataRequired()])
     PostCode = StringField("Post Code", [DataRequired()])
@@ -36,7 +36,6 @@ class Calculator_Form(FlaskForm):
             raise ValidationError("Field data is none")
         elif field.data == '':
             raise ValueError("cannot fetch data")
-
         try:  # for ISoC, we only accept integers and not float
             int_data = int(field.data)
         except ValueError:
@@ -65,11 +64,17 @@ class Calculator_Form(FlaskForm):
 
     # validate start date here
     def validate_StartDate(self, field):
-        pass
+        current_date=datetime.date.today()
+        min_date=datetime.date(2008,7,1)
+        if field.data > current_date:
+            raise ValidationError("Input date cannot be greater than today")
+        elif field.data < min_date:
+            raise ValidationError("Input date cannot be before July 1st 2008")
 
     # validate start time here
+    #taskkill /f /im python.exe
     def validate_StartTime(self, field):
-        pass
+        pass        
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
