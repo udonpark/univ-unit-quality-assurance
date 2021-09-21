@@ -26,27 +26,32 @@ class Calculator():
 
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
     def is_holiday(self, start_date):
+        #use the workalender module and weekends
         pass
 
-    def is_peak(self):
+    def is_peak(self, start_time, end_time):
+        #assuming that the time is in 24 hr format
         pass
 
-    def peak_period(self, start_time):
-        pass
+    # def peak_period(self, start_time):
+    #
 
     def get_duration(self, start_time):
+        #total charging time of the car
         pass
 
     # to be acquired through API
     def get_sun_hour(self, sun_hour):
         pass
 
-    # to be acquired through API
+    # to be acquired through API --
     def get_solar_energy_duration(self, start_time):
+        #duration in which car charges while in day light
         pass
 
-    # to be acquired through API
+    # to be acquired through API --
     def get_day_light_length(self, start_time):
+        #sunrise - sunset
         pass
 
     # to be acquired through API
