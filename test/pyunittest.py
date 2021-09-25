@@ -6,13 +6,11 @@ class TestCalculator(unittest.TestCase):
     # you may create more test methods
     # you may add parameters to test methods
     # this is an example
+    """sdbasd"""
     def test_cost(self):
         self.calculator = Calculator()
         self.assertEqual(self.calculator.cost_calculation("", "", "", "", ""), "")
 
-        """
-        sada
-        sad"""
     # you may create test suite if needed
     if __name__ == "__main__":
         pass
