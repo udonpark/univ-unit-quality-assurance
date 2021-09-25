@@ -8,8 +8,7 @@ build:
     script: 
         - echo "Building"
         - pip3 install --upgrade pip
-        - python3 calculator.py
-         -python3 calculator_form.py
+        - python3 -m unittest app/calculator.py
 
 test:
     stage: test
@@ -19,8 +18,5 @@ test:
         - pip3 install --upgrade pip
         - python3 test/pyunittest.py
         - coverage app/calculator.py
-        - coverage report
-        - coverage html
-        - coverage run app/calculator_form.py
         - coverage report
         - coverage html
