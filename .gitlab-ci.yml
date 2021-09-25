@@ -21,6 +21,3 @@ test:
         - coverage app/calculator.py
         - coverage report
         - coverage html
-        - coverage run app/calculator_form.py
-        - coverage report
-        - coverage html
