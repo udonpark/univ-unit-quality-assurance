@@ -11,7 +11,7 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(self.calculator.cost_calculation("", "", "", "", ""), "")
 
         """
-        
+        sada
         sad"""
     # you may create test suite if needed
     if __name__ == "__main__":
