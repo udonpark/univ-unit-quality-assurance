@@ -1,6 +1,5 @@
-import os import unittest
+import os
 from src.utils.FileManager import FileManager
-
 from app.calculator import *
 import unittest
 
