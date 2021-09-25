@@ -7,7 +7,7 @@ class TestCalculator(unittest.TestCase):
     # you may add parameters to test methods
     # this is an example
     """sdbasd"""
-        def test_cost(self):
+    def test_cost(self):
             self.calculator = Calculator()
             test_configuration="1"
             test_initial_state=10
