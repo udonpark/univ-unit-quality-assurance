@@ -2,7 +2,7 @@ from datetime import date, datetime
 from workalendar.oceania import Australia
 
 class Calculator():
-    # you can choose to initialise variables here, if needed.
+    # you can choose to initialise variables here, if needed.s
     def __init__(self):
         pass
 
