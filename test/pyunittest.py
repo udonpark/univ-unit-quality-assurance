@@ -8,17 +8,17 @@ class TestCalculator(unittest.TestCase):
     # this is an example
     """sdbasd"""
         def test_cost(self):
-        self.calculator = Calculator()
-        test_configuration="1"
-        test_initial_state=10
-        test_final_state=100
-        test_capacity=80
-        
-        """
-        """
-        self.assertEqual(self.calculator.is_holiday("2021-01-01"), True)
-        self.assertEqual(self.calculator.is_holiday("2021-01-02"), False)
-        self.assertEqual(self.calculator.is_holiday("2021-01-09"), True)
+            self.calculator = Calculator()
+            test_configuration="1"
+            test_initial_state=10
+            test_final_state=100
+            test_capacity=80
+
+            """
+            """
+            self.assertEqual(self.calculator.is_holiday("2021-01-01"), True)
+            self.assertEqual(self.calculator.is_holiday("2021-01-02"), False)
+            self.assertEqual(self.calculator.is_holiday("2021-01-09"), True)
 
 
         """
