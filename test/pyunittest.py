@@ -20,19 +20,10 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(self.calculator.is_holiday("2021-01-02"), False)
         self.assertEqual(self.calculator.is_holiday("2021-01-09"), True)
 
-        self.assertEqual(self.calculator.is_peak("05:59"), False)
-        self.assertEqual(self.calculator.is_peak("06:00"), True)
-        self.assertEqual(self.calculator.is_peak("18:00"), True)
-        self.assertEqual(self.calculator.is_peak("18:01"), False)
 
         """
         Pairwise testing was used for 
         """
-        self.assertEqual(self.calculator.cost_calculation(test_configuration, test_initial_state, test_final_state, test_capacity, True, True), "")
-        self.assertEqual(self.calculator.cost_calculation(test_configuration, test_initial_state, test_final_state, test_capacity, False, True), "")
-        self.assertEqual(self.calculator.cost_calculation(test_configuration, test_initial_state, test_final_state, test_capacity, True, False), "")
-        self.assertEqual(self.calculator.cost_calculation(test_configuration, test_initial_state, test_final_state, test_capacity, False, False), "")
-
 
 
     def test_cost(self):
