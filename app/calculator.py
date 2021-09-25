@@ -25,7 +25,7 @@ class Calculator():
 
 
     # you may create some new methods at your convenience, or modify these methods, or choose not to use them.
-     def is_holiday(self, start_date):
+    def is_holiday(self, start_date):
         #use the workalender module and weekends
         #start date is a string
         cal = Australia()
