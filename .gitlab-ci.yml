@@ -8,7 +8,7 @@ build:
     script: 
         - echo "Building"
         - pip3 install --upgrade pip
-        - python3 -m calculator.py test
+        - python3 -m unitest app/calculator.py
 
 test:
     stage: test
