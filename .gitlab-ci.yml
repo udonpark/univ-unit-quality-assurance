@@ -4,11 +4,10 @@ stages:
 
 build:
     stage: build
-    image: python:3.9-alpine
+    image: python:3.9
     script: 
         - echo "Building"
         - pip3 install --upgrade pip
-        - pip3 install --flask_wtf pip
         - python3  app/calculator_form.py
 
 test:
