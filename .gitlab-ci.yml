@@ -4,19 +4,19 @@ stages:
 
 build:
     stage: build
-    image: python:3.8-alpine
+    image: python:3.9-alpine
     script: 
         - echo "Building"
         - pip3 install --upgrade pip
-        - python3 -m unittest test/pyunittest.py
+        - python3  app/calculator_form.py
 
 test:
     stage: test
-    image: python:3.8-alpine
+    image: python:3.9
     script:
         - echo "Testing"
         - pip3 install --upgrade pip
-        - python3 test/pyunittest.py
-        - coverage app/calculator.py
+        - python3 app/calculator_form.py
+        - coverage app/calculator_form.py
         - coverage report
         - coverage html
