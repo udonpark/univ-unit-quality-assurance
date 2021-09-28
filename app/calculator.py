@@ -63,10 +63,11 @@ class Calculator():
         return difference_hours
 
     def mins_to_hours(self, mins):
-        # converts minutess to time format. e.g., "150" -> 2:30
+        # converts minutes to time format. e.g., "150" -> 2:30
         return str(mins // 60) + ":" + str(mins % 60)
 
     def hours_to_mins(self, hours):
+        # converts hours to minutes. e.g., "2:30" -> 150
         hours = hours.split(":")
         return int(hours[0]) * 60 + int(hours[1])
 
