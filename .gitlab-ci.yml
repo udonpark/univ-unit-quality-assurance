@@ -1,23 +1,19 @@
 stages:
-    - build
-    - test
+  - build
+  - test
 
 build:
-    stage: build
-    image: python:3.8-alpine
-    script: 
-        - echo "Building"
-        - pip3 install --upgrade pip
-        - python3 calculator.py
-         -python3 calculator_form.py
+  stage: build
+  image: python:3.8-alpine
+  script:
+    - echo "Building"
+    - pip3 install --upgrade pip
+    - python3 app/calculator.py
 
 test:
-    stage: test
-    image: python:3.8-alpine
-    script:
-        - echo "Testing"
-        - pip3 install --upgrade pip
-        - python3 pyunittest.py
-        - coverage run calculator.py
-        - coverage report
-        - coverage html
+  stage: test
+  image: python:3.8-alpine
+  script:
+    - echo "Testing"
+    - pip3 install --upgrade pip
+    - python3 -m unittest test.pyunittest
