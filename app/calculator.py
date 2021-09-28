@@ -1,3 +1,6 @@
+import requests
+import json
+
 class Calculator():
     # you can choose to initialise variables here, if needed.
     def __init__(self):
@@ -38,24 +41,87 @@ class Calculator():
         pass
 
     # to be acquired through API
-    def get_sun_hour(self, sun_hour):
-        pass
+    def get_sun_hour(self, postcode, start_date):
+
+        location_id = ""
+        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+
+        #for the location id
+        response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
+        response_data = response.json()
+
+        for a in response_data:
+            location_id += a['id']
+
+        # for sun hours duration
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
+        response_data1 = response1.json()
+        return response_data1['sunHours'] #sunHours aka solar insolation
+
 
     # to be acquired through API
     def get_solar_energy_duration(self, start_time):
         pass
 
     # to be acquired through API
-    def get_day_light_length(self, start_time):
-        pass
+    def get_day_light_length(self, postcode,start_date):
+        location_id = ""
+        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+
+        #for the location id
+        response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
+        response_data = response.json()
+
+        for a in response_data:
+            location_id += a['id']
+
+        # for sun hours duration
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+        response_data1 = response1.json()
+
+        sunrise = response_data1['sunrise']
+        sunrise = sunrise.split(":")
+        sunrisehours = sunrise[0]
+        sunrisemins = sunrise[1]
+
+        sunset = response_data1['sunset']
+        sunset = sunset.split(":")
+        sunsethours = sunset[0]
+        sunsetmins = sunset[1]
+
+        hours_difference = sunsethours - sunrisehours
+        mins_difference = sunsetmins - sunrisemins
+
+        return hours_difference + (mins_difference/60)
+
+    # # to be acquired through API
+    # def get_solar_insolation(self, solar_insolation): same as sun hour
+    #     pass
 
     # to be acquired through API
-    def get_solar_insolation(self, solar_insolation):
-        pass
+    def get_cloud_cover(self, postcode, start_date, start_time):
 
-    # to be acquired through API
-    def get_cloud_cover(self):
-        pass
+        location_id = ""
+        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+
+        #for the location id
+        response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
+        response_data = response.json()
+
+        for a in response_data:
+            location_id += a['id']
+
+        # for sun hours duration
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+        response_data1 = response1.json()
+        hour = response_data1['hourlyWeatherHistory']
+
+        start_time1 = start_time.split(":")
+        #here we get the cloud cover for the specific time
+        for b in hour:
+            if b["hour"] == start_time1[0]:
+                return b["cloudCoverPct"] #the cloud cover
+
 
     def calculate_solar_energy(self):
         pass
