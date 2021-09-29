@@ -280,7 +280,7 @@ class Calculator():
             cc = self.get_cloud_cover(post_code, start_date, hours_list[i])
             generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60)
 
-        return generation_list, hours_list
+        return generation_list, hours_list, et
 
     def calculate_solar_energy(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
         ref = datetime.date.today().year
@@ -302,6 +302,7 @@ class Calculator():
 
         list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
         hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
+        et = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[2]
         reference_date = str(ref - 1) + date[1]
         list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
         reference_date = str(ref - 2) + date[1]
@@ -329,6 +330,16 @@ class Calculator():
             net = self.get_power(config) - solar
             cost += self.cal_cost(self.h_to_m(self.minus_time(hour_list[i], hour_list[i + 1])), self.get_base_price(config), hour_list[i], start_date, net)
             total_energy += mean_list[i]
+
+        charging_time = self.charge_time(final_state, initial_state, capacity, power)
+        et = self.add_time(start_time, self.m_to_h(charging_time))
+
+        # if charging takes place outside sunrise hours, we have to take it into account its cost as well
+        if (self.h_to_m(start_time)) < self.h_to_m(hour_list[0]):
+            cost += self.cal_cost(self.h_to_m(self.minus_time(start_time, self.h_to_m(hour_list[0]))), self.get_base_price(config), start_time, start_date, power)
+        if (self.h_to_m(et)) > self.h_to_m(hour_list[-1]):
+            cost += self.cal_cost(self.h_to_m(self.minus_time(self.h_to_m(hour_list[-1]), et)), self.get_base_price(config), start_time, start_date, power)
+
         # return total_energy if curious
         return cost
 
