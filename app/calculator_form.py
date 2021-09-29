@@ -73,8 +73,47 @@ class Calculator_Form(FlaskForm):
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
-        pass
+        if field.data is None or "":
+            raise ValidationError("Field data is empty or None")
+        try:
+            int_data = int(field.data)
+        except ValueError:
+            raise ValueError("Incorrect configuration has been entered")
+        if int_data < 0 or int_data > 9:
+            raise ValueError("Configuration needs to be between 0 and 9")
+
 
     # validate postcode here
     def validate_PostCode(self, field):
-        pass
+        if field.data == "":
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
+
+        #List of postcodes
+        postcode_ranges = [range(1000, 2000), range(2000, 2600), range(2619, 2900),
+                           range(2921, 3000), range(2600, 2619), range(2900, 2921),
+                           range(3000, 4000), range(8000, 9000), range(4000, 5000),
+                           range(9000, 10000), range(5000, 5800), range(5800, 6000),
+                           range(6000, 6798), range(6800, 7000), range(7000, 7800),
+                           range(7800, 8000)]
+
+        # or (str(int_data[0:2]) == "02" and len(str(int_data)) == 4)
+        try:
+            int_data = int(field.data)
+        except ValueError:
+            raise ValueError("Incorrect configuration has been entered")
+
+        if not (int_data in range(1000, 2000) or int_data in range(2000, 2600) or int_data in range(2619, 2900)
+        or int_data in range(1000, 2000) or int_data in range(2000, 2600) or int_data in range(2619, 2900)
+        or int_data in range(2921, 3000) or int_data in range(2600, 2619) or int_data in range(2900, 2921)
+        or int_data in range(3000, 4000) or int_data in range(8000, 9000) or int_data in range(4000, 5000)
+        or int_data in range(9000, 10000) or int_data in range(5000, 5800) or int_data in range(5800, 6000)
+        or int_data in range(6000, 6798) or int_data in range(6800, 7000) or int_data in range(7000, 7800)
+        or int_data in range(7800, 8000)
+        or (field.data[0:2] == "02" and len(field.data) == 4)
+        or (field.data[0:2] == "08" and len(field.data) == 4)
+        or (field.data[0:2] == "09" and len(field.data == 4))):
+
+            raise ValueError("Incorrect postcode entered")
+
