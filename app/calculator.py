@@ -282,30 +282,28 @@ class Calculator():
 
         return generation_list, hours_list, et
 
-    def calculate_solar_energy(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
+    def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
         ref = datetime.date.today().year
         reference_date = ""
-        inputdate = "2024-02-29"
         inputdate = datetime.datetime.strptime(inputdate, "%Y-%m-%d")
         if inputdate.year > ref:
-            date = str(inputdate).split(" ")[0].split("-", 1)
-            reference_date = str(ref) + "-" + date[1]
-            month = date[1].split("-")[0]
-            day = date[1].split("-")[-1]
+            dates = str(inputdate).split(" ")[0].split("-", 1)
+            reference_date = str(ref) + "-" + dates[1]
+            month = dates[1].split("-")[0]
+            day = dates[1].split("-")[-1]
             try:
                 datetime.datetime.strptime(reference_date, "%Y-%m-%d")
             except ValueError:
                 reference_date = str(ref) + '-' + month + '-' + str((int(day) - 1))
-            print(reference_date)
+        dates = str(inputdate).split(" ")[0].split("-", 1)
 
         # new_date = datetime.datetime.strptime(reference_date, "%Y-%m-%d")
 
         list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
         hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
-        et = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[2]
-        reference_date = str(ref - 1) + date[1]
+        reference_date = str(ref - 1) + dates[1]
         list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
-        reference_date = str(ref - 2) + date[1]
+        reference_date = str(ref - 2) + dates[1]
         list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[2]
 
         mean_list = []
@@ -342,8 +340,3 @@ class Calculator():
 
         # return total_energy if curious
         return cost
-
-
-
-
-
