@@ -9,7 +9,7 @@ build:
         - echo "Building"
         - pip3 install --upgrade pip
         - pip3 install -r requirement.txt
-        - python3 -m unittest test/test_calculator.py
+        - python3 -m unittest test/unittest.py
 
 test:
     stage: test
@@ -17,7 +17,7 @@ test:
     script:
         - echo "Testing"
         - pip3 install --upgrade pip
-        - python3 test/test_calculator.py
+        - python3 test/unittest.py
         - coverage app/calculator.py
         - coverage report
         - coverage html

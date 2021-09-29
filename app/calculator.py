@@ -23,6 +23,7 @@ class Charger_Configurations:
                            "base": 50},
                      }
 
+
     def get_power(self, config):
         return self.configuration[str(config)]["power"]
 
