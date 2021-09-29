@@ -13,7 +13,7 @@ class Calculator_Form(FlaskForm):
     StartTime = TimeField("Start Time", [DataRequired("Data is missing or format is incorrect")], format='%H:%M')
     ChargerConfiguration = StringField("Charger Configuration", [DataRequired()])
     PostCode = StringField("Post Code", [DataRequired()])
-
+    #
     # use validate_ + field_name to activate the flask-wtforms built-in validator
     # this is an example for you
     def validate_BatteryPackCapacity(self, field):
