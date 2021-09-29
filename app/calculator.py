@@ -59,9 +59,6 @@ class Calculator():
         return response_data1['sunHours'] #sunHours aka solar insolation
 
 
-    # to be acquired through API
-    def get_solar_energy_duration(self, start_time):
-        pass
 
     # to be acquired through API
     def get_day_light_length(self, postcode,start_date):
@@ -93,10 +90,6 @@ class Calculator():
         mins_difference = sunsetmins - sunrisemins
 
         return hours_difference + (mins_difference/60)
-
-    # # to be acquired through API
-    # def get_solar_insolation(self, solar_insolation): same as sun hour
-    #     pass
 
     # to be acquired through API
     def get_cloud_cover(self, postcode, start_date, start_time):
