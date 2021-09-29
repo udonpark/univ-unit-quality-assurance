@@ -8,6 +8,7 @@ build:
     script: 
         - echo "Building"
         - pip3 install --upgrade pip
+        - pip3 install -r requirement.txt
         - python3 -m unittest test/pyunittest.py
 
 test:
