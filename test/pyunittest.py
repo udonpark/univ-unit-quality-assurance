@@ -9,22 +9,22 @@ class TestCalculator(unittest.TestCase):
     # you may add parameters to test methods
     # this is an example
     def test_cost(self):
-        self.calculator = Calculator()
-        test_configuration = "1"
-        test_initial_state = 10
-        test_final_state = 100
-        test_capacity = 80
+        #initialize object of calculator
+        c = Calculator(8, 20, 80, 82, 2314, "2021-01-08", "12:30", 350, 50)
 
         """
+        Boundary value testing
         """
-        self.assertEqual(self.calculator.is_holiday("2021-01-01"), True)
-        self.assertEqual(self.calculator.is_holiday("2021-01-02"), False)
-        self.assertEqual(self.calculator.is_holiday("2021-01-09"), True)
-
-        self.assertEqual(self.calculator.is_peak("05:59"), False)
-        self.assertEqual(self.calculator.is_peak("06:00"), True)
-        self.assertEqual(self.calculator.is_peak("18:00"), True)
-        self.assertEqual(self.calculator.is_peak("18:01"), False)
+        self.assertEqual(self.Calculator.is_holiday("2021-01-01"), True)
+        self.assertEqual(self.Calculator.is_holiday("2021-01-02"), False)
+        self.assertEqual(self.Calculator.is_holiday("2021-01-09"), True)
+        """
+        partition value testing
+        """
+        self.assertEqual(self.Calculator.is_peak("05:59"), False)
+        self.assertEqual(self.Calculator.is_peak("06:00"), True)
+        self.assertEqual(self.Calculator.is_peak("18:00"), True)
+        self.assertEqual(self.Calculator.is_peak("18:01"), False)
 
         """
         Pairwise testing was used for 
@@ -67,4 +67,4 @@ class TestCalculator(unittest.TestCase):
 
     # you may create test suite if needed
     if __name__ == "__main__":
-        pass
+        unittest.main()
