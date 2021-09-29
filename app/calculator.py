@@ -14,21 +14,6 @@ import math
 
 class Calculator():
     country = Australia()
-
-    def __init__(self, configuration, initial_state, final_state, capacity, postcode, startdate, starttime, power,
-                 base_price):
-        self.capacity = capacity
-        self.postcode = postcode
-        self.startdate = datetime.datetime.strptime(startdate, "%Y-%m-%d")
-        self.starttime = datetime.datetime.strptime(starttime, "%H:%M")
-        self.finalstate = final_state
-        self.initialstate = initial_state
-        self.configuration = configuration
-        # calculated variables
-        self.base_price = base_price
-        self.power = power
-        self.total_cal()
-
     configuration = {"1": {"power": 2,
                            "base": 5},
                      "2": {"power": 3.6,
@@ -47,11 +32,25 @@ class Calculator():
                            "base": 50},
                      }
 
+    def __init__(self, configuration, initial_state, final_state, capacity, postcode, startdate, starttime, power,
+                 base_price):
+        self.capacity = capacity
+        self.postcode = postcode
+        self.startdate = datetime.datetime.strptime(startdate, "%Y-%m-%d")
+        self.starttime = datetime.datetime.strptime(starttime, "%H:%M")
+        self.finalstate = final_state
+        self.initialstate = initial_state
+        self.configuration = configuration
+        # calculated variables
+        self.base_price = base_price
+        self.power = power
+        self.total_cal()
+
     def get_power(self, config):
         return self.configuration[str(config)]["power"]
 
-    def get_base_price(self, base_price):
-        return self.configuration[str(base_price)]["base"]
+    def get_base_price(self, config):
+        return self.configuration[str(config)]["base"]
 
     def is_peak(self, time):
         # assuming that the time is in 24 hr format
@@ -140,7 +139,7 @@ class Calculator():
         return response_data1['sunHours'] #sunHours aka solar insolation
 
     # to be acquired through API
-    def get_day_light_length(self, postcode, start_date, start_time):
+    def get_day_light_length(self, postcode, start_date):
         location_id = ""
         start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
 
@@ -186,11 +185,11 @@ class Calculator():
         difference_hours = str(difference_mins // 60) + ":" + str(difference_mins % 60)
         return difference_hours
 
-    def mins_to_hours(self, mins):
-        # converts minutes to time format. e.g., "150" -> 2:30
+    def m_to_h(self, mins):
+        # converts minutes to hours time format. e.g., "150" -> 2:30
         return str(mins // 60) + ":" + str(mins % 60)
 
-    def hours_to_mins(self, hours):
+    def h_to_m(self, hours):
         # converts hours to minutes. e.g., "2:30" -> 150
         hours = hours.split(":")
         return int(hours[0]) * 60 + int(hours[1])
@@ -214,20 +213,20 @@ class Calculator():
         response_data1 = response1.json()
 
         # obtain sunrise and sunset times, and also end time of the charging process
-        end_time = self.add_time(start_time, self.minus_time(charging_length))
+        end_time = self.add_time(start_time, self.m_to_h(charging_length))
         sunrise = response_data1['sunrise']
         sunset = response_data1['sunset']
 
         # make sure to calculate charging time during daylight hours
-        if self.hours_to_mins(sunrise) > self.hours_to_mins(start_time):
+        if self.h_to_m(sunrise) > self.h_to_m(start_time):
             start_time = sunrise
 
-        if self.hours_to_mins(sunset) < self.hours_to_mins(end_time):
+        if self.h_to_m(sunset) < self.h_to_m(end_time):
             end_time = sunset
 
         # calculate and return duration time in minutes
         duration_hours = self.minus_time(start_time, end_time)
-        return self.hours_to_mins(duration_hours)
+        return self.h_to_m(duration_hours), start_time, end_time
 
     # to be acquired through API
     def get_cloud_cover(self, postcode, start_date, start_time):
@@ -253,9 +252,87 @@ class Calculator():
             if b["hour"] == start_time1[0]:
                 return b["cloudCoverPct"] #the cloud cover
 
+    def solar_energy_aux(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
+        si = self.get_sun_hour(post_code, start_date)
+        dl = self.get_day_light_length(post_code, start_date)
+        charging_length = self.charge_time(final_state, initial_state, capacity, power)
+        du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[0]
+        st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[1]
+        et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[2]
 
-    def calculate_solar_energy(self, start_date):
-        pass
+        hours_list = []
+        time_iterator = st
+        while self.h_to_m(time_iterator) < self.h_to_m(et):
+            if self.h_to_m(time_iterator) // 60 == self.h_to_m(et):
+                hours_list.append(et)
+            else:
+                if self.h_to_m(st) % 60 != 0:
+                    hours_list.append(time_iterator)  # eg, 8:40
+                    time_iterator = self.add_time(time_iterator, self.m_to_h(60 - self.h_to_m(st) % 60))
+                else:
+                    time_iterator = self.add_time(time_iterator, "1:00")
+                    # et is 13:30
+                    # 11, 12, 13, 13:30
+
+        generation_list = []
+        for i in range(len(hours_list) - 1):
+            duration = self.h_to_m(self.minus_time(hours_list[i], hours_list[i + 1]))
+            cc = self.get_cloud_cover(post_code, start_date, hours_list[i])
+            generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60)
+
+        return generation_list, hours_list
+
+    def calculate_solar_energy(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
+        ref = datetime.date.today().year
+        reference_date = ""
+        inputdate = "2024-02-29"
+        inputdate = datetime.datetime.strptime(inputdate, "%Y-%m-%d")
+        if inputdate.year > ref:
+            date = str(inputdate).split(" ")[0].split("-", 1)
+            reference_date = str(ref) + "-" + date[1]
+            month = date[1].split("-")[0]
+            day = date[1].split("-")[-1]
+            try:
+                datetime.datetime.strptime(reference_date, "%Y-%m-%d")
+            except ValueError:
+                reference_date = str(ref) + '-' + month + '-' + str((int(day) - 1))
+            print(reference_date)
+
+        # new_date = datetime.datetime.strptime(reference_date, "%Y-%m-%d")
+
+        list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
+        hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
+        reference_date = str(ref - 1) + date[1]
+        list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
+        reference_date = str(ref - 2) + date[1]
+        list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[2]
+
+        mean_list = []
+        for i in range(len(list1)):
+            mean_list[i] = (list1[i] + list2[i] + list3[i]) / 3
+
+        return mean_list, hour_list
+
+    """
+    9:30 - 13:20
+    [9:30, 10:00, 11:00, 12:00, 13:00, 13:20] <- hour_list
+    [energy1, energy2, energy3, energy4, energy5] <- mean_list
+    """
+    def calculate_charging_cost(self, start_date, start_time, post_code, final_state, initial_state, capacity, power, config):
+        mean_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
+        hour_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
+        cost = 0
+        total_energy = 0
+        for i in range(mean_list):
+            # self, chargetime, base_price, start_time, start_date, power
+            solar = mean_list[i]
+            net = self.get_power(config) - solar
+            cost += self.cal_cost(self.h_to_m(self.minus_time(hour_list[i], hour_list[i + 1])), self.get_base_price(config), hour_list[i], start_date, net)
+            total_energy += mean_list[i]
+        # return total_energy if curious
+        return cost
+
+
 
 
 
