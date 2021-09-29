@@ -9,7 +9,7 @@ class TestCalculator(unittest.TestCase):
     # this is an example
     def test_cost(self):
         self.calculator = Calculator()
-        self.assertEqual(self.calculator.cost_calculation("", "", "", "", ""), "")
+        self.assertEqual(self.calculator.cal_cost("", "", "", "", ""), "")
 
     #Need to do testing on the methods NOT using api
 
