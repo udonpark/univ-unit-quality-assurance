@@ -261,6 +261,7 @@ class Calculator():
         si = self.get_sun_hour(post_code, start_date)
         dl = self.get_day_light_length(post_code, start_date)
         charging_length = self.charge_time(final_state, initial_state, capacity, power)
+        print(charging_length)
         du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[0]
         st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[1]
         et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[2]
