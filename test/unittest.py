@@ -8,6 +8,11 @@ class TestCalculator(unittest.TestCase):
     # you may create more test methods
     # you may add parameters to test methods
     # this is an example
+    def test_get_power(self):
+        cal = Calculator()
+        self.assertRaises(KeyError, cal.get_power("9"))
+        self.assertRaises(KeyError, cal.get_power("-1"))
+
     def test_cost(self):
         #initialize object of calculator
         c = Calculator(8, 20, 80, 82, 2314, "2021-01-08", "12:30", 350, 50)
