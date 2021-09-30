@@ -32,19 +32,8 @@ class Calculator():
                            "base": 50},
                      }
 
-    def __init__(self, configuration, initial_state, final_state, capacity, postcode, startdate, starttime, power,
-                 base_price):
-        self.capacity = capacity
-        self.postcode = postcode
-        self.startdate = datetime.datetime.strptime(startdate, "%Y-%m-%d")
-        self.starttime = datetime.datetime.strptime(starttime, "%H:%M")
-        self.finalstate = final_state
-        self.initialstate = initial_state
-        self.configuration = configuration
-        # calculated variables
-        self.base_price = base_price
-        self.power = power
-        self.total_cal()
+    def __init__(self):
+        pass
 
     def get_power(self, config):
         return self.configuration[str(config)]["power"]
@@ -54,14 +43,18 @@ class Calculator():
 
     def is_peak(self, time):
         # assuming that the time is in 24 hr format
-        ti = time
-        return ti >= datetime.datetime.strptime("06:00", "%H:%M") and ti < datetime.datetime.strptime("18:00", "%H:%M")
+        ti=time
+        if not isinstance(ti, datetime.datetime):
+            ti = datetime.datetime.strptime(time, "%H:%M")
+        return ti >= datetime.datetime.strptime("06:00", "%H:%M") and ti <= datetime.datetime.strptime("18:00", "%H:%M")
 
     def is_holiday(self, start_date):
         # use the workalender module and weekends
         # start date is a string
         cal = Australia()
-        date_str = start_date
+        date_str=start_date
+        if not isinstance(date_str, datetime.datetime):
+            date_str= datetime.datetime.strptime(start_date, "%Y-%m-%d")
         # check if its a holiday or a weekend
         return (not cal.is_working_day(date_str)) or date_str.weekday() > 4
 
@@ -92,8 +85,8 @@ class Calculator():
         cost = 0
         surcharge = 1
         discount = 1
-        date = start_date  # start_date, "%Y-%m-%d") #initial time
-        time = start_time  # atetime.datetime.strptime(start_time, "%H:%M") #initial date
+        date = datetime.datetime.strptime(start_date, "%Y-%m-%d")   # start_date, "%Y-%m-%d") #initial time
+        time = datetime.datetime.strptime(start_time, "%H:%M")   # datetime.datetime.strptime(start_time, "%H:%M") #initial date
         charge_time = math.ceil(chargetime)
         for minute in range(chargetime):
             if not self.is_peak(time):
@@ -115,9 +108,9 @@ class Calculator():
     #     charge_time=self.charge_time(self.finalstate, self.initialstate, float(power))
     #     self.cost=self.cal_cost(charge_time, base_price, self.starttime, self.startdate)
 
-    def total_cal(self):
-        self.duration = self.charge_time(self.finalstate, self.initialstate, self.capacity, self.power)
-        self.cost = self.cal_cost(self.duration, self.base_price, self.starttime, self.startdate, self.power)
+    # def total_cal(self):
+    #     self.duration = self.charge_time(self.finalstate, self.initialstate, self.capacity, self.power)
+    #     self.cost = self.cal_cost(self.duration, self.base_price, self.starttime, self.startdate, self.power)
 
 
 
@@ -169,7 +162,7 @@ class Calculator():
 
         return hours_difference + (mins_difference/60)
 
-    def add_time(self, time1, time2):
+    def add_time(self, time1, time2): 
         # add two times in string format. e.g., "10:30" + "4:40" -> "15:10"
         time1 = time1.split(":")
         time2 = time2.split(":")
