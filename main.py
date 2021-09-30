@@ -17,7 +17,6 @@ def operation_result():
     # html tags with matching "name="
 
     calculator_form = Calculator_Form(request.form)
-
     # validation of the form
     if request.method == "POST" and calculator_form.validate():
         # if valid, create calculator to calculate the time and cost

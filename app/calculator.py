@@ -167,6 +167,8 @@ class Calculator():
         time2 = time2.split(":")
         sum_mins = int(time1[0]) * 60 + int(time2[0]) * 60 + int(time1[1]) + int(time2[1])
         sum_hours = str(sum_mins // 60) + ":" + str(sum_mins % 60)
+        if sum_mins%60<10:
+            sum_hours+="0"
         return sum_hours
 
     def minus_time(self, start_time, end_time):
@@ -288,6 +290,11 @@ class Calculator():
                 continue
             generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60)
 
+        """
+        7:20 -13:30
+        generation_list = [34, 45, 65, 34, 45, 56, 32]
+        hours_list = [7:20, 8:00, 9:00, 10:00, 11:00, 12:00, 13:00, 13:20]
+        """
         return generation_list, hours_list, et
 
     def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
