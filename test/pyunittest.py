@@ -26,9 +26,9 @@ class TestCalculator(unittest.TestCase):
     def test_CloudCoverRetrieval(self):
         pass
 
-    def some_test(self):
-        main.ev_calculator_app.config["WTF_CSRF_ENABLED"] = False  # disable CSRF to prevent context errors
-        with main.ev_calculator_app.app_context():
+    # def some_test(self):
+    #     main.ev_calculator_app.config["WTF_CSRF_ENABLED"] = False  # disable CSRF to prevent context errors
+    #     with main.ev_calculator_app.app_context():
 
     # place your testing code here
 
