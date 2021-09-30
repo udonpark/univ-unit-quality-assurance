@@ -1,15 +1,10 @@
 import requests
 import json
 
-
-
 from datetime import date as date
 import datetime
 from workalendar.oceania import Australia
 import math
-
-
-
 
 
 class Calculator():
@@ -32,19 +27,8 @@ class Calculator():
                            "base": 50},
                      }
 
-    def __init__(self, configuration, initial_state, final_state, capacity, postcode, startdate, starttime, power,
-                 base_price):
-        self.capacity = capacity
-        self.postcode = postcode
-        self.startdate = datetime.datetime.strptime(startdate, "%Y-%m-%d")
-        self.starttime = datetime.datetime.strptime(starttime, "%H:%M")
-        self.finalstate = final_state
-        self.initialstate = initial_state
-        self.configuration = configuration
-        # calculated variables
-        self.base_price = base_price
-        self.power = power
-        self.total_cal()
+    def __init__(self):
+        pass
 
     def get_power(self, config):
         return self.configuration[str(config)]["power"]
@@ -54,8 +38,8 @@ class Calculator():
 
     def is_peak(self, time):
         # assuming that the time is in 24 hr format
-        ti = time
-        return ti >= datetime.datetime.strptime("06:00", "%H:%M") and ti < datetime.datetime.strptime("18:00", "%H:%M")
+        ti = datetime.datetime.strptime(time, "%H:%M")
+        return (ti >= datetime.datetime.strptime("06:00", "%H:%M") and ti < datetime.datetime.strptime("18:00", "%H:%M"))
 
     def is_holiday(self, start_date):
         # use the workalender module and weekends
@@ -124,7 +108,9 @@ class Calculator():
     # to be acquired through API
     def get_sun_hour(self, postcode, start_date):
         location_id = ""
-        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
@@ -141,7 +127,9 @@ class Calculator():
     # to be acquired through API
     def get_day_light_length(self, postcode, start_date):
         location_id = ""
-        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
@@ -151,7 +139,7 @@ class Calculator():
             location_id += a['id']
 
         # for sun hours duration
-        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
         response_data1 = response1.json()
 
         sunrise = response_data1['sunrise']
@@ -164,8 +152,8 @@ class Calculator():
         sunsethours = sunset[0]
         sunsetmins = sunset[1]
 
-        hours_difference = sunsethours - sunrisehours
-        mins_difference = sunsetmins - sunrisemins
+        hours_difference = int(sunsethours) - int(sunrisehours)
+        mins_difference = int(sunsetmins) - int(sunrisemins)
 
         return hours_difference + (mins_difference/60)
 
@@ -198,7 +186,9 @@ class Calculator():
     def get_solar_energy_duration(self, postcode, start_date, start_time, charging_length):
         # duration in which car charges while in day light
         location_id = ""
-        start_date1 = str(start_date)[::-1]  # start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1]  # start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         # for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode=' + str(postcode))
@@ -209,7 +199,7 @@ class Calculator():
 
         # for sun hours duration
         response1 = requests.get(
-            'http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+            'http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
         response_data1 = response1.json()
 
         # obtain sunrise and sunset times, and also end time of the charging process
@@ -232,7 +222,9 @@ class Calculator():
     def get_cloud_cover(self, postcode, start_date, start_time):
 
         location_id = ""
-        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
@@ -242,7 +234,7 @@ class Calculator():
             location_id += a['id']
 
         # for sun hours duration
-        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
         response_data1 = response1.json()
         hour = response_data1['hourlyWeatherHistory']
 
