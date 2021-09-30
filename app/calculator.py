@@ -287,6 +287,7 @@ class Calculator():
             duration = self.h_to_m(self.minus_time(hours_list[i], hours_list[i + 1]))
             cc = self.get_cloud_cover(post_code, start_date, hours_list[i])
             if cc is None:
+                generation_list.append(si * 1 / dl * (1 / 100) * 50 * 0.20 * duration / 60)
                 continue
             generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60)
 
