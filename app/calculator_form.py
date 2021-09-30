@@ -21,11 +21,11 @@ class Calculator_Form(FlaskForm):
             raise ValidationError('Field data is none')
         elif field.data == '':
             raise ValueError("cannot fetch data")
-        try:  # raise exception when it is non-numeric
+        try:
             float_data = float(field.data)
         except ValueError:
             raise ValueError("Field data must be a numeric value")
-        if float_data <= 0:
+        if float(field.data) <= 0:
             raise ValueError("Field data must be a positive value")
 
     # validate initial charge here
@@ -45,8 +45,8 @@ class Calculator_Form(FlaskForm):
             raise ValueError("Field data must be >= 0")
         elif int_data > 100:
             raise ValueError("Field data must be <= 100")
-        elif field.data > self.FinalCharge.data:
-            raise ValueError("Initial charge data error")
+        # elif field.data > self.FinalCharge.data:
+        #     raise ValueError("Initial charge data error")
 
     # validate final charge here
     def validate_FinalCharge(self, field):
@@ -85,7 +85,7 @@ class Calculator_Form(FlaskForm):
 
     # validate postcode here
     def validate_PostCode(self, field):
-        if field.data == "":
+        if field.data is None:
             raise ValidationError('Field data is none')
         elif field.data == '':
             raise ValueError("cannot fetch data")
