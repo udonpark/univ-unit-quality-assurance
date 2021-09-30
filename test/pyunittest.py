@@ -89,7 +89,7 @@ class TestCalculator(unittest.TestCase):
         cal=Calculator()
         self.assertEqual(cal.m_to_h(150), "2:30")
         self.assertEqual(cal.m_to_h(250), "4:10")
-        self.assertEqual(cal.m_to_h(0), "0:0")
+        self.assertEqual(cal.m_to_h(0), "0:00")
         with self.assertRaises(TypeError):
             cal.m_to_h("a")
     
@@ -99,8 +99,9 @@ class TestCalculator(unittest.TestCase):
 
 
     def test_solar_energy_aux(self):
-         cal=Calculator()
-         self.assertEqual(cal.solar_energy_aux("2021-01-01", "21:00", "2313", 80, 20, 80, 350))
+        cal=Calculator()
+        #self.assertEqual(cal.solar_energy_aux("01-01-2020", "21:00", "3800", 80, 20, 80, 350),([], [], '19:45') )
+        self.assertEqual(cal.solar_energy_aux("01-01-2020", "12:00", "3800", 80, 20, 80, 350),([], ['12:00', '13:00'], '13:30') )
 
     # you may create test suite if needed
     if __name__ == "__main__":

@@ -1,15 +1,10 @@
 import requests
 import json
 
-
-
 from datetime import date as date
 import datetime
 from workalendar.oceania import Australia
 import math
-
-
-
 
 
 class Calculator():
@@ -117,7 +112,9 @@ class Calculator():
     # to be acquired through API
     def get_sun_hour(self, postcode, start_date):
         location_id = ""
-        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
@@ -134,7 +131,9 @@ class Calculator():
     # to be acquired through API
     def get_day_light_length(self, postcode, start_date):
         location_id = ""
-        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
@@ -144,7 +143,7 @@ class Calculator():
             location_id += a['id']
 
         # for sun hours duration
-        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
         response_data1 = response1.json()
 
         sunrise = response_data1['sunrise']
@@ -157,8 +156,8 @@ class Calculator():
         sunsethours = sunset[0]
         sunsetmins = sunset[1]
 
-        hours_difference = sunsethours - sunrisehours
-        mins_difference = sunsetmins - sunrisemins
+        hours_difference = int(sunsethours) - int(sunrisehours)
+        mins_difference = int(sunsetmins) - int(sunrisemins)
 
         return hours_difference + (mins_difference/60)
 
@@ -180,7 +179,10 @@ class Calculator():
 
     def m_to_h(self, mins):
         # converts minutes to hours time format. e.g., "150" -> 2:30
-        return str(mins // 60) + ":" + str(mins % 60)
+        out= str(mins // 60) + ":" + str(mins % 60) 
+        if mins%60<10:
+            out+="0"
+        return out
 
     def h_to_m(self, hours):
         # converts hours to minutes. e.g., "2:30" -> 150
@@ -191,7 +193,9 @@ class Calculator():
     def get_solar_energy_duration(self, postcode, start_date, start_time, charging_length):
         # duration in which car charges while in day light
         location_id = ""
-        start_date1 = str(start_date)[::-1]  # start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1]  # start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         # for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode=' + str(postcode))
@@ -202,22 +206,26 @@ class Calculator():
 
         # for sun hours duration
         response1 = requests.get(
-            'http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+            'http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
         response_data1 = response1.json()
 
         # obtain sunrise and sunset times, and also end time of the charging process
         end_time = self.add_time(start_time, self.m_to_h(charging_length))
         sunrise = response_data1['sunrise']
         sunset = response_data1['sunset']
-
+        # print("start time="+start_time)
+        # print("end time="+ end_time)
         # make sure to calculate charging time during daylight hours
         if self.h_to_m(sunrise) > self.h_to_m(start_time):
             start_time = sunrise
 
         if self.h_to_m(sunset) < self.h_to_m(end_time):
             end_time = sunset
-
+        # print(end_time)
+        #end_time=end_time[:-3]
         # calculate and return duration time in minutes
+        print("start-time"+ start_time)
+        print("end-time=" + end_time)
         duration_hours = self.minus_time(start_time, end_time)
         return self.h_to_m(duration_hours), start_time, end_time
 
@@ -225,7 +233,9 @@ class Calculator():
     def get_cloud_cover(self, postcode, start_date, start_time):
 
         location_id = ""
-        start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+        start_date = start_date.split("-")
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
@@ -235,7 +245,7 @@ class Calculator():
             location_id += a['id']
 
         # for sun hours duration
-        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=+' + start_date1)
+        response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
         response_data1 = response1.json()
         hour = response_data1['hourlyWeatherHistory']
 
@@ -252,7 +262,8 @@ class Calculator():
         du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[0]
         st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[1]
         et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[2]
-
+        # print("et"+et+ "st "+st)
+        # print(st, et)
         hours_list = []
         time_iterator = st
         while self.h_to_m(time_iterator) < self.h_to_m(et):
@@ -263,7 +274,9 @@ class Calculator():
                     hours_list.append(time_iterator)  # eg, 8:40
                     time_iterator = self.add_time(time_iterator, self.m_to_h(60 - self.h_to_m(st) % 60))
                 else:
+                    hours_list.append(time_iterator)
                     time_iterator = self.add_time(time_iterator, "1:00")
+                    
                     # et is 13:30
                     # 11, 12, 13, 13:30
 
@@ -271,6 +284,8 @@ class Calculator():
         for i in range(len(hours_list) - 1):
             duration = self.h_to_m(self.minus_time(hours_list[i], hours_list[i + 1]))
             cc = self.get_cloud_cover(post_code, start_date, hours_list[i])
+            if cc is None:
+                continue
             generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60)
 
         return generation_list, hours_list, et
