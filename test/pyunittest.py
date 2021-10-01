@@ -101,11 +101,28 @@ class TestCalculator(unittest.TestCase):
     def test_solar_energy_aux(self):
         cal=Calculator()
         #self.assertEqual(cal.solar_energy_aux("01-01-2020", "21:00", "3800", 80, 20, 80, 350),([], [], '19:45') )
-        self.assertEqual(cal.solar_energy_aux("01-01-2020", "12:00", "3800", 80, 20, 80, 350),([0.05966101694915255], ['12:00', '13:00'], '13:30') )
-        self.assertEqual(cal.solar_energy_aux("01-01-2020", "23:00", "3800", 80, 20, 80, 350),([], [], '19:45'))
+        self.assertEqual(cal.solar_energy_aux("01-01-2020", "12:00", "3800", 80, 20, 80, 350), ([0.05966101694915255, 0.029830508474576276],
+ ['12:00', '13:00', '13:30'], '13:30'))
+        self.assertEqual(cal.solar_energy_aux("28-02-2017", "23:00", "3800", 80, 20, 80, 350),([], [], '19:01'))
 
-    def calculate_solar_energy(self):
-        pass
+        self.assertEqual(cal.solar_energy_aux("14-09-2021", "12:40", "3800", 80, 20, 2000, 50), ([0.013295615275813298,
+  0.03988684582743989,
+  0.03988684582743989,
+  0.03988684582743989,
+  0.03988684582743989,
+  0.03988684582743989,
+  0.005983026874115984],
+ ['12:40', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '18:09'],
+ '18:09'))
+
+    def test_calculate_solar_energy(self):
+        cal = Calculator()
+        self.assertEqual(cal.calculate_solar_energy("04-06-2020", "12:00", "3800", 80, 20, 80, 350), (
+        [0.02517241379310345, 0.012586206896551724], ['12:00', '13:00', '13:30']))
+        self.assertEqual(cal.calculate_solar_energy("13-07-2028", "13:50", "3800", 80, 10, 300, 700),
+                         ([0.0036506330845953497, 0.021903798507572098, 0.0073012661691906995],
+                          ['13:50', '14:00', '15:00', '14:80']))
+
     # MOCKING for api functions
     def test_get_sun_hour(self):
         pass
@@ -115,6 +132,7 @@ class TestCalculator(unittest.TestCase):
     # you may create test suite if needed
     if __name__ == "__main__":
         pass
+
 
 def main():
     suit = unittest.TestLoader().loadTestsFromTestCase(TestCalculator)
