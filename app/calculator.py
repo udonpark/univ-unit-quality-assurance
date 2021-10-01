@@ -115,7 +115,6 @@ class Calculator():
         # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
         start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
-
         #for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
         response_data = response.json()
@@ -268,16 +267,18 @@ class Calculator():
         du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[0]
         st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[1]
         et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[2]
-        print("du "+ str(du))
+
         hours_list = []
         time_iterator = st
         while self.h_to_m(time_iterator) < self.h_to_m(et):
-            if self.h_to_m(time_iterator) // 60 == self.h_to_m(et):
+            if self.h_to_m(time_iterator) // 60 == (self.h_to_m(et) // 60):
+                hours_list.append(time_iterator)
                 hours_list.append(et)
+                time_iterator = et
             else:
-                if self.h_to_m(st) % 60 != 0:
+                if self.h_to_m(time_iterator) % 60 != 0:
                     hours_list.append(time_iterator)  # eg, 8:40
-                    time_iterator = self.add_time(time_iterator, self.m_to_h(60 - self.h_to_m(st) % 60))
+                    time_iterator = self.add_time(time_iterator, self.m_to_h(60 - (self.h_to_m(time_iterator) % 60)))
                 else:
                     hours_list.append(time_iterator)
                     time_iterator = self.add_time(time_iterator, "1:00")
@@ -304,6 +305,9 @@ class Calculator():
     def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
         ref = datetime.date.today().year
         reference_date = ""
+        start_date = inputdate.split("-")
+        inputdate = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
+
         inputdate = datetime.datetime.strptime(inputdate, "%Y-%m-%d")
         if inputdate.year > ref:
             dates = str(inputdate).split(" ")[0].split("-", 1)
@@ -314,21 +318,26 @@ class Calculator():
                 datetime.datetime.strptime(reference_date, "%Y-%m-%d")
             except ValueError:
                 reference_date = str(ref) + '-' + month + '-' + str((int(day) - 1))
+        else:
+            reference_date = str(str(inputdate).split(" ")[0])
         dates = str(inputdate).split(" ")[0].split("-", 1)
 
         # new_date = datetime.datetime.strptime(reference_date, "%Y-%m-%d")
+        temp_date = reference_date.split("-")
+        reference_date = temp_date[2] + "-" + temp_date[1] + "-" + temp_date[0]
 
         list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
         hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
-        reference_date = str(ref - 1) + dates[1]
-        list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
-        reference_date = str(ref - 2) + dates[1]
-        list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[2]
+        # reference_date = str(int(ref - 1)) + str(dates[0])
+        reference_date = temp_date[2] + "-" + temp_date[1] + "-" + str(int(temp_date[0])-1)
+        list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
+        # reference_date = str(int(temp_date[2])) + "-" + temp_date[1] + "-" + temp_date[0]
+        reference_date = temp_date[2] + "-" + temp_date[1] + "-" + str(int(temp_date[0]) - 2)
+        list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
 
         mean_list = []
         for i in range(len(list1)):
-            mean_list[i] = (list1[i] + list2[i] + list3[i]) / 3
-
+            mean_list.append((float(list1[i]) + float(list2[i]) + float(list3[i])) / 3)
         return mean_list, hour_list
 
     """
