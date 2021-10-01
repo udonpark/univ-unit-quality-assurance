@@ -50,7 +50,7 @@ class TestCalculator(unittest.TestCase):
 
     def test_inc_time(self):
         cal=Calculator()
-        test_time=datetime.datetime.strptime("01/01/2021", "%Y-%m-%d")
+        test_time=datetime.datetime.strptime("01/01/2021", "%d/%m/%Y")
         ref=test_time+ datetime.timedelta(minutes=1)
         self.assertEqual(cal.inc_time(test_time), ref)
 
