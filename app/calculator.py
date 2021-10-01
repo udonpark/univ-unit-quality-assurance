@@ -50,7 +50,7 @@ class Calculator():
         cal = Australia()
         date_str=start_date
         if not isinstance(date_str, datetime.datetime):
-            date_str= datetime.datetime.strptime(start_date, "%Y-%m-%d")
+            date_str= datetime.datetime.strptime(start_date, "%d/%m/%Y")
         # check if its a holiday or a weekend
         return (not cal.is_working_day(date_str)) or date_str.weekday() > 4
 
@@ -70,7 +70,7 @@ class Calculator():
         return ti
 
     def cal_cost_per_min(self, power, base_price, surcharge, discount):
-        cost_per_min = 1 / 60 * power * base_price / 100 * discount * surcharge
+        cost_per_min = (1 / 60 * power) * base_price / 100 * discount * surcharge
         return cost_per_min
 
     def cal_cost(self, chargetime, base_price, start_time, start_date, power):
@@ -81,7 +81,7 @@ class Calculator():
         cost = 0
         surcharge = 1
         discount = 1
-        date = datetime.datetime.strptime(start_date, "%Y-%m-%d")   # start_date, "%Y-%m-%d") #initial time
+        date = datetime.datetime.strptime(start_date, "%d/%m/%Y")   # start_date, "%Y-%m-%d") #initial time
         time = datetime.datetime.strptime(start_time, "%H:%M")   # datetime.datetime.strptime(start_time, "%H:%M") #initial date
         charge_time = math.ceil(chargetime)
         for minute in range(chargetime):
