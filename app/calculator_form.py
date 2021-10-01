@@ -2,7 +2,7 @@ import flask_wtf
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, TimeField
 from wtforms.validators import DataRequired, ValidationError, Optional
-
+import datetime 
 # validation for form inputs
 class Calculator_Form(FlaskForm):
     # this variable name needs to match with the input attribute name in the html file
@@ -64,13 +64,25 @@ class Calculator_Form(FlaskForm):
         elif int_data > 100:
             raise ValueError("Field data must be <= 100")
 
+
     # validate start date here
     def validate_StartDate(self, field):
-        pass
+        current_date=datetime.date.today()
+        min_date=datetime.date(2008,7,1)
+        if field.data > current_date:
+            raise ValidationError("Input date cannot be greater than today")
+        elif field.data < min_date:
+            raise ValidationError("Input date cannot be before July 1st 2008")
 
     # validate start time here
+    #taskkill /f /im python.exe
     def validate_StartTime(self, field):
-        pass
+        hours= field.data.hour
+        minute=field.data.minute
+        if hours>23 or hours<0:
+            raise ValidationError("Invalid hour")
+        if minute>59 or minute<0:
+            raise ValidationError("Invalid minutes")
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
