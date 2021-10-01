@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  image: python:3.8-alpine
+  image: python:3.9
   tags:
     - fit2107-runner
   script:
