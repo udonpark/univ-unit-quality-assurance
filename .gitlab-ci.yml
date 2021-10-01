@@ -10,6 +10,7 @@ build:
   script:
     - echo "Building"
     - pip3 install --upgrade pip
+    - pip install -r requirements.txt
     - python3 app/calculator_form.py
 
 test:
@@ -18,5 +19,4 @@ test:
   script:
     - echo "Testing"
     - pip3 install --upgrade pip
-    - pip3 install -r requirements.txt
     - python3 -m calculator_form_test test.calculator_form_test
