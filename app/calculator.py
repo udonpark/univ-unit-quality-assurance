@@ -116,12 +116,28 @@ class Calculator():
         # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
         start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
-        #for the location id
+        ref = datetime.date.today().year
+        reference_date = ""
+        # y = start_date[2]
+        # while str(y) > str(ref):
+        #     int(y
+
+        # year_date = start_date[2]
+        if int(start_date1[2]) > datetime.datetime.today().year:
+            if int(start_date[1]) > datetime.datetime.today().month:
+                start_date[2] = datetime.datetime.today().year - 1
+            else:
+                start_date[2] = datetime.datetime.today().year
+
+        start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
+        # 2024-8-1, 2021-8-1. 2024-11-1, 2021-11-1
+        # for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
         response_data = response.json()
 
         for a in response_data:
             location_id += a['id']
+            break
 
         # for sun hours duration
         response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
@@ -141,6 +157,7 @@ class Calculator():
 
         for a in response_data:
             location_id += a['id']
+            break
 
         # for sun hours duration
         response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
@@ -205,6 +222,7 @@ class Calculator():
 
         for a in response_data:
             location_id += a['id']
+            break
 
         # for sun hours duration
         response1 = requests.get(
@@ -263,7 +281,6 @@ class Calculator():
             if b["hour"] == int(time):
                 return b["cloudCoverPct"] #the cloud cover
 
-
     def solar_energy_aux(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
         si = self.get_sun_hour(post_code, start_date)
         dl = self.get_day_light_length(post_code, start_date)
@@ -311,8 +328,9 @@ class Calculator():
         ref = datetime.date.today().year
         reference_date = ""
         start_date = inputdate.split("-")
+        # year_date = start_date[2]
         inputdate = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
-
+        # currentdate = datetime.datetime.today().year
         inputdate = datetime.datetime.strptime(inputdate, "%Y-%m-%d")
         if inputdate.year > ref:
             dates = str(inputdate).split(" ")[0].split("-", 1)
@@ -367,9 +385,9 @@ class Calculator():
 
         # if charging takes place outside sunrise hours, we have to take it into account its cost as well
         if (self.h_to_m(start_time)) < self.h_to_m(hour_list[0]):
-            cost += self.cal_cost(self.h_to_m(self.minus_time(start_time, self.h_to_m(hour_list[0]))), self.get_base_price(config), start_time, start_date, power)
+            cost += self.cal_cost(self.h_to_m(self.minus_time(start_time, hour_list[0])), self.get_base_price(config), start_time, start_date, power)
         if (self.h_to_m(et)) > self.h_to_m(hour_list[-1]):
-            cost += self.cal_cost(self.h_to_m(self.minus_time(self.h_to_m(hour_list[-1]), et)), self.get_base_price(config), start_time, start_date, power)
+            cost += self.cal_cost(self.h_to_m(self.minus_time((hour_list[-1]), et)), self.get_base_price(config), start_time, start_date, power)
 
         # return total_energy if curious
         return cost
