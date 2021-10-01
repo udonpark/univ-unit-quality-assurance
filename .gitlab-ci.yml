@@ -5,6 +5,8 @@ stages:
 build:
   stage: build
   image: python:3.8-alpine
+  tags:
+    - fit2107-runner
   script:
     - echo "Building"
     - pip3 install --upgrade pip
