@@ -1,3 +1,7 @@
+before_script:
+    - pip install --upgrade pip
+    - pip install -r requirements.txt
+
 stages:
   - build
   - test
@@ -9,14 +13,14 @@ build:
     - fit2107-runner
   script:
     - echo "Building"
-    - pip3 install --upgrade pip
-    - pip install -r requirements.txt
+    - pip install --upgrade pip
     - python3 app/calculator.py
+    - python3 app/calculator_form.py
 
 test:
   stage: test
   image: python:3.8-alpine
   script:
     - echo "Testing"
-    - pip3 install --upgrade pip
+    - pip install --upgrade pip
     - python3 -m unittest test.pyunittest
