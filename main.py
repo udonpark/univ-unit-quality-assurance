@@ -29,12 +29,11 @@ def operation_result():
         start_date = request.form['StartDate']
         start_time = request.form['StartTime']
         charger_configuration = request.form['ChargerConfiguration']
-        location_name = request.form["Location"]
 
         # you may change the logic as your like
-        duration = calculator.charge_time(start_time)
+        duration = calculator.get_duration(start_time)
 
-        is_peak = calculator.is_peak(start_time)
+        is_peak = calculator.is_peak()
 
         if is_peak:
             peak_period = calculator.peak_period(start_date)
@@ -46,6 +45,7 @@ def operation_result():
         # time = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
 
         # you may change the return statement also
+        
         # values of variables can be sent to the template for rendering the webpage that users will see
         # return render_template('calculator.html', cost = cost, time = time, calculation_success = True, form = calculator_form)
         return render_template('calculator.html', calculation_success=True, form=calculator_form)

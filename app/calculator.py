@@ -81,8 +81,8 @@ class Calculator():
         cost = 0
         surcharge = 1
         discount = 1
-        date = datetime.datetime.strptime(str(start_date), "%d/%m/%Y")   # start_date, "%Y-%m-%d") #initial time
-        time = datetime.datetime.strptime(str(start_time), "%H:%M")   # datetime.datetime.strptime(start_time, "%H:%M") #initial date
+        date = datetime.datetime.strptime(start_date, "%d/%m/%Y")   # start_date, "%Y-%m-%d") #initial time
+        time = datetime.datetime.strptime(start_time, "%H:%M")   # datetime.datetime.strptime(start_time, "%H:%M") #initial date
         charge_time = math.ceil(chargetime)
         for minute in range(chargetime):
             if not self.is_peak(time):
@@ -111,7 +111,7 @@ class Calculator():
 
 
     # to be acquired through API
-    def get_sun_hour(self, postcode, start_date, location):
+    def get_sun_hour(self, postcode, start_date):
         location_id = ""
         # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
@@ -120,7 +120,8 @@ class Calculator():
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
         response_data = response.json()
 
-        location_id = self.get_locationID(postcode, location)
+        for a in response_data:
+            location_id += a['id']
 
         # for sun hours duration
         response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
@@ -128,7 +129,7 @@ class Calculator():
         return response_data1['sunHours'] #sunHours aka solar insolation
 
     # to be acquired through API
-    def get_day_light_length(self, postcode, start_date, location):
+    def get_day_light_length(self, postcode, start_date):
         location_id = ""
         # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
@@ -138,7 +139,8 @@ class Calculator():
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
         response_data = response.json()
 
-        location_id = self.get_locationID(postcode, location)
+        for a in response_data:
+            location_id += a['id']
 
         # for sun hours duration
         response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
@@ -190,7 +192,7 @@ class Calculator():
         return int(hours[0]) * 60 + int(hours[1])
 
     # to be acquired through API --
-    def get_solar_energy_duration(self, postcode, start_date, start_time, charging_length, location):
+    def get_solar_energy_duration(self, postcode, start_date, start_time, charging_length):
         # duration in which car charges while in day light
         location_id = ""
         # start_date1 = str(start_date)[::-1]  # start date in reverse form as start date input is in reverse in the api
@@ -201,7 +203,8 @@ class Calculator():
         response = requests.get('http://118.138.246.158/api/v1/location?postcode=' + str(postcode))
         response_data = response.json()
 
-        location_id = self.get_locationID(postcode, location)
+        for a in response_data:
+            location_id += a['id']
 
         # for sun hours duration
         response1 = requests.get(
@@ -232,7 +235,7 @@ class Calculator():
         return self.h_to_m(duration_hours), start_time, end_time
 
     # to be acquired through API
-    def get_cloud_cover(self, postcode, start_date, start_time, location):
+    def get_cloud_cover(self, postcode, start_date, start_time):
 
         location_id = ""
         # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
@@ -243,7 +246,8 @@ class Calculator():
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
         response_data = response.json()
 
-        location_id = self.get_locationID(postcode, location)
+        for a in response_data:
+            location_id += a['id']
 
         # for sun hours duration
         response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
@@ -256,14 +260,14 @@ class Calculator():
             if b["hour"] == start_time1[0]:
                 return b["cloudCoverPct"] #the cloud cover
 
-    def solar_energy_aux(self, start_date, start_time, post_code, final_state, initial_state, capacity, power, location):
-        si = self.get_sun_hour(post_code, start_date, location)
-        dl = self.get_day_light_length(post_code, start_date, location)
+    def solar_energy_aux(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
+        si = self.get_sun_hour(post_code, start_date)
+        dl = self.get_day_light_length(post_code, start_date)
         charging_length = self.charge_time(final_state, initial_state, capacity, power)
 
-        du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length, location)[0]
-        st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length, location)[1]
-        et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length, location)[2]
+        du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[0]
+        st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[1]
+        et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[2]
 
         hours_list = []
         time_iterator = st
@@ -286,7 +290,7 @@ class Calculator():
         generation_list = []
         for i in range(len(hours_list) - 1):
             duration = self.h_to_m(self.minus_time(hours_list[i], hours_list[i + 1]))
-            cc = self.get_cloud_cover(post_code, start_date, hours_list[i], location)
+            cc = self.get_cloud_cover(post_code, start_date, hours_list[i])
             if cc is None:
                 generation_list.append(si * 1 / dl * (1 / 100) * 50 * 0.20 * duration / 60)
                 continue
@@ -299,7 +303,7 @@ class Calculator():
         """
         return generation_list, hours_list, et
     #ko
-    def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power, location):
+    def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
         ref = datetime.date.today().year
         reference_date = ""
         start_date = inputdate.split("-")
@@ -323,14 +327,14 @@ class Calculator():
         temp_date = reference_date.split("-")
         reference_date = temp_date[2] + "-" + temp_date[1] + "-" + temp_date[0]
 
-        list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power,location)[0]
-        hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power, location)[1]
+        list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
+        hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
         # reference_date = str(int(ref - 1)) + str(dates[0])
         reference_date = temp_date[2] + "-" + temp_date[1] + "-" + str(int(temp_date[0])-1)
-        list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power, location)[0]
+        list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
         # reference_date = str(int(temp_date[2])) + "-" + temp_date[1] + "-" + temp_date[0]
         reference_date = temp_date[2] + "-" + temp_date[1] + "-" + str(int(temp_date[0]) - 2)
-        list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power, location)[0]
+        list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
 
         mean_list = []
         for i in range(len(list1)):
@@ -342,9 +346,9 @@ class Calculator():
     [9:30, 10:00, 11:00, 12:00, 13:00, 13:20] <- hour_list
     [energy1, energy2, energy3, energy4, energy5] <- mean_list
     """
-    def calculate_charging_cost(self, start_date, start_time, post_code, final_state, initial_state, capacity, power, config, location):
-        mean_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power, location)[0]
-        hour_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power, location)[1]
+    def calculate_charging_cost(self, start_date, start_time, post_code, final_state, initial_state, capacity, power, config):
+        mean_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
+        hour_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
         cost = 0
         total_energy = 0
         for i in range(mean_list):
@@ -365,18 +369,6 @@ class Calculator():
 
         # return total_energy if curious
         return cost
-
-    def get_locationID(self, postcode, location):
-        location_id = ""
-        response = requests.get('http://118.138.246.158/api/v1/location?postcode='+postcode)
-        response_data = response.json()
-
-        for a in response_data:
-            if a['name'] == location.upper():
-                location_id += a["id"]
-
-        return location_id
-
 
     @property
     def get(self):
