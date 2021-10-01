@@ -1,4 +1,6 @@
 import datetime
+
+from requests.api import get
 try:
     from app.calculator import *
 except ImportError:
@@ -7,20 +9,33 @@ except ImportError:
     import sys
     sys.path.append(sys.path[0] + "/..")
     from app.calculator import *
-
+    
 from app.calculator import *
 
 import unittest
 from unittest.mock import Mock
-def test_mock():
-   mock = Mock()
-        mock.return_value = {
-            "postcode": "3800",
-            "date":"01-01-2020",
-        }
+from mock import patch
+from main import url_exists
 
-    Calculator.is_holiday = Mock()
-        holi_new_yr = "2020-01-01"
-        Calculator.return_value = True
-        assert Calculator.is_holiday()
 
+
+class FetchTests(TestCase):
+    def test_returns_true_if_url_found(self):
+        with patch('requests.get') as mock_request:
+            url = 'http://118.138.246.158/api/v1/location?postcode=3800'
+
+            # set a `status_code` attribute on the mock object
+            # with value 200
+            mock_request.return_value.status_code = 200
+
+            self.assertTrue(url_exists(url))
+
+    def test_returns_false_if_url_not_found(self):
+        with patch('requests.get') as mock_request:
+                url = 'http://118.138.246.158/api/v1/location=1232113'
+
+                # set a `status_code` attribute on the mock object
+                # with value 404
+                mock_request.return_value.status_code = 404
+
+                self.assertFalse(url_exists(url))
