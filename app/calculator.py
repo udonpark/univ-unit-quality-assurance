@@ -81,7 +81,7 @@ class Calculator():
         cost = 0
         surcharge = 1
         discount = 1
-        date = datetime.datetime.strptime(start_date, "%d/%m/%Y")   # start_date, "%Y-%m-%d") #initial time
+        date = datetime.datetime.strptime(start_date, "%d-%m-%Y")   # start_date, "%Y-%m-%d") #initial time
         time = datetime.datetime.strptime(start_time, "%H:%M")   # datetime.datetime.strptime(start_time, "%H:%M") #initial date
         charge_time = math.ceil(chargetime)
         for minute in range(chargetime):
@@ -351,7 +351,7 @@ class Calculator():
         hour_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
         cost = 0
         total_energy = 0
-        for i in range(mean_list):
+        for i in range(len(mean_list)):
             # self, chargetime, base_price, start_time, start_date, power
             solar = mean_list[i]
             net = self.get_power(config) - solar
