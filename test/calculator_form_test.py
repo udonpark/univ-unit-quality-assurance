@@ -32,6 +32,23 @@ class TestCase(unittest.TestCase):
     def test_validateBatteryPack(self):
         #checking whether it raises error or not
 
+        with self.request(method='POST', data={'BatteryPackCapacity': "45"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_BatteryPackCapacity(f.BatteryPackCapacity)
+            except ValueError as val:
+                assert False, "Should not raise exception"
+
+        with self.request(method='POST', data={'BatteryPackCapacity': None}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_BatteryPackCapacity(f.BatteryPackCapacity)
+
+        with self.request(method='POST', data={'BatteryPackCapacity': "test"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_BatteryPackCapacity(f.BatteryPackCapacity)
+
         with self.request(method='POST', data={'BatteryPackCapacity': "-1"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
