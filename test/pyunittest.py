@@ -1,6 +1,14 @@
-import datetime
+# import datetime
     
-from app.calculator import *
+# from app.calculator import *
+try:
+    from app.calculator import *
+except ImportError:
+    # fix import issues
+    # ref: https://stackoverflow.com/questions/54339118/python3-x-modulenotfounderror-when-import-file-from-parent-directory/54340672
+    import sys
+    sys.path.append(sys.path[0] + "/..")
+    from app.calculator import *
 
 import unittest
 class TestCalculator(unittest.TestCase):
@@ -40,8 +48,8 @@ class TestCalculator(unittest.TestCase):
 
         cal=Calculator()
         self.assertEqual(cal.is_holiday("01/01/2021"), True)
-        self.assertEqual(cal.is_holiday("01/01/2021"), True)
-        self.assertEqual(cal.is_holiday("01/01/2021"), True)
+        self.assertEqual(cal.is_holiday("02/01/2021"), True)
+        self.assertEqual(cal.is_holiday("09/01/2021"), True)
 
 
     def test_chargetime(self):
@@ -128,15 +136,12 @@ class TestCalculator(unittest.TestCase):
         # }
 
         #attr = {'method.get_sunlight_hours': 8.8, 'something.'}
-        self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"),8.8)
-        self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"),0.9)
+        self.assertEqual(cal.get_sun_hour("3800", "01/01/2020"),8.8)
+        self.assertEqual(cal.get_sun_hour("3800", "01/02/2020"),0.9)
         
-        self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"), 8.8)
-        self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"), 0.9)
 
     def test_get_day_light_length(self):
         cal = Calculator()
-        self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
         self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
 
     def test_get_cloud_cover(self):

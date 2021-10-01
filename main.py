@@ -29,17 +29,30 @@ def operation_result():
         start_date = request.form['StartDate']
         start_time = request.form['StartTime']
         charger_configuration = request.form['ChargerConfiguration']
-
+        postcode = request.form['Post Code']
         # you may change the logic as your like
         duration = calculator.get_duration(start_time)
+        """
+        1. get power 
+        get base price
+        total charge time = charge_time()
+        raw_cost = cal_cost()
+        calculate_solar_energy
+        """
+        power = calculator.get_power(charger_configuration)
+        base_price = calculator.get_base_price(charger_configuration)
 
-        is_peak = calculator.is_peak()
+        total_charge_time = calculator.charge_time(final_charge, initial_charge, battery_capacity, power)
+        cost = calculator.calculate_charging_cost(start_date, start_time, postcode, final_charge, initial_charge, battery_capacity, power, charger_configuration)
+        time=total_charge_time
+        # is_peak = calculator.is_peak()
+        
 
-        if is_peak:
-            peak_period = calculator.peak_period(start_date)
+        # if is_peak:
+        #     peak_period = calculator.peak_period(start_date)
 
-        is_holiday = calculator.is_holiday(start_date)
-
+        # is_holiday = calculator.is_holiday(start_date)
+        
         # cost = calculator.cost_calculation(initial_charge, final_charge, battery_capacity, is_peak, is_holiday)
 
         # time = calculator.time_calculation(initial_charge, final_charge, battery_capacity, power)
