@@ -1,5 +1,6 @@
 from flask import request
 from flask import Flask
+from wtforms import ValidationError
 
 import app.calculator_form as cal
 import unittest
@@ -139,9 +140,61 @@ class TestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 f.validate_PostCode(f.PostCode)
 
+    def test_validateStartDate(self):
+        with self.request(method='POST', data={'StartDate': "23/02/2020"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_StartDate(f.StartDate)
+            except ValueError as val:
+                assert False, "Should not raise exception"
 
+        with self.request(method='POST', data={'StartDate': " "}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartDate(f.StartDate)
 
+        with self.request(method='POST', data={'StartDate': "2030-11-27"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartDate(f.StartDate)
 
+        with self.request(method='POST', data={'StartDate': "2015-02-07"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartDate(f.StartDate)
+
+    def test_validateStartTime(self):
+        with self.request(method='POST', data={'StartTime': "23:50"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_StartTime(f.StartTime)
+            except ValueError as val:
+                assert False, "Should not raise exception"
+
+        with self.request(method='POST', data={'StartTime': " "}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_StartTime(f.StartTime)
+
+        with self.request(method='POST', data={'StartTime': "24:50"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_StartTime(f.StartTime)
+
+        with self.request(method='POST', data={'StartTime': "23:60"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartTime(f.StartTime)
+
+        with self.request(method='POST', data={'StartTime': "-1:60"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartTime(f.StartTime)
+
+        with self.request(method='POST', data={'StartTime': "23:-1"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartTime(f.StartTime)
 
 
 if __name__ == '__main__':

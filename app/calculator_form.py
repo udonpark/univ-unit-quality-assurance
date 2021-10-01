@@ -67,6 +67,8 @@ class Calculator_Form(FlaskForm):
 
     # validate start date here
     def validate_StartDate(self, field):
+        if field.data is None or "":
+            raise ValidationError("Field data is empty or None")
         current_date=datetime.date.today()
         min_date=datetime.date(2008,7,1)
         if field.data > current_date:
@@ -77,6 +79,8 @@ class Calculator_Form(FlaskForm):
     # validate start time here
     #taskkill /f /im python.exe
     def validate_StartTime(self, field):
+        if field.data is None or "":
+            raise ValidationError("Field data is empty or None")
         hours= field.data.hour
         minute=field.data.minute
         if hours>23 or hours<0:
