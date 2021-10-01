@@ -212,7 +212,7 @@ class Calculator():
 
         # obtain sunrise and sunset times, and also end time of the charging process
         end_time = self.add_time(start_time, self.m_to_h(charging_length))
-        sunrise = response_data1['sunrise']
+        sunrise = response_data1['sunrise'] 
         if len(sunrise) == 8:
             sunrise = sunrise[:-3]
         sunset = response_data1['sunset']
@@ -267,7 +267,7 @@ class Calculator():
         du = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[0]
         st = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[1]
         et = self.get_solar_energy_duration(post_code, start_date, start_time, charging_length)[2]
-
+        print("du "+ str(du))
         hours_list = []
         time_iterator = st
         while self.h_to_m(time_iterator) < self.h_to_m(et):
@@ -301,7 +301,7 @@ class Calculator():
         hours_list = [7:20, 8:00, 9:00, 10:00, 11:00, 12:00, 13:00, 13:20]
         """
         return generation_list, hours_list, et
-
+    #ko
     def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
         ref = datetime.date.today().year
         reference_date = ""
