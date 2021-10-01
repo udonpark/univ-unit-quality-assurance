@@ -14,6 +14,7 @@ build:
     - pip install backports.zoneinfo
     - pip install -r requirements.txt
     - python3 app/calculator.py
+    - python3 app/calculator_form.py
 
 test:
   stage: test
@@ -25,4 +26,3 @@ test:
     - pip install backports.zoneinfo
     - pip install -r requirements.txt
     - python3 -m unittest 
-    - coverage html
