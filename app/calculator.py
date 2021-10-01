@@ -298,7 +298,7 @@ class Calculator():
         hours_list = [7:20, 8:00, 9:00, 10:00, 11:00, 12:00, 13:00, 13:20]
         """
         return generation_list, hours_list, et
-
+    #ko
     def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
         ref = datetime.date.today().year
         reference_date = ""
