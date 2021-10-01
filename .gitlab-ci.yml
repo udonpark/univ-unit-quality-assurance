@@ -8,6 +8,7 @@ build:
   script:
     - echo "Building"
     - pip3 install --upgrade pip
+    - pip install requests
     - python3 app/calculator.py
 
 test:
