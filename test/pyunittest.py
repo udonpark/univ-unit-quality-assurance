@@ -117,7 +117,6 @@ class TestCalculator(unittest.TestCase):
                          ([0.0036506330845953497, 0.021903798507572098, 0.0073012661691906995],
                           ['13:50', '14:00', '15:00', '14:80']))
 
-    # MOCKING for api functions
 
     def test_get_sun_hour(self):
         cal = Calculator()
@@ -130,24 +129,16 @@ class TestCalculator(unittest.TestCase):
         #attr = {'method.get_sunlight_hours': 8.8, 'something.'}
         self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"),8.8)
         self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"),0.9)
-        
-        self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"), 8.8)
-        self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"), 0.9)
 
     def test_get_day_light_length(self):
         cal = Calculator()
         self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
-        self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
+    #     self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
 
     def test_get_cloud_cover(self):
         cal = Calculator()
-        self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"),None)
-        self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"),None)
-
-        #self.assertEqual(cal.get_cloud_cover("3830", "30-04-2021"),"")
-
-        self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"), None)
-        self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"), None)
+        self.assertEqual(cal.get_cloud_cover("2620", "30-04-2021", "08:00"),19)
+        self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"),71)
 
 def main():
     suit = unittest.TestLoader().loadTestsFromTestCase(TestCalculator)
