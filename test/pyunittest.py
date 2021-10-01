@@ -1,4 +1,3 @@
-#import main
 import datetime
 try:
     from app.calculator import *
@@ -33,7 +32,7 @@ class TestCalculator(unittest.TestCase):
             self.assertRaises(KeyError, cal.get_base_price("-1"))
 
         self.assertEqual(cal.get_base_price("1"), 5)
-
+ 
     def test_ispeak(self):
         cal = Calculator()
         self.assertEqual(cal.is_peak("05:59"), False)
@@ -42,7 +41,10 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(cal.is_peak("18:01"), False)
 
     def test_is_holiday(self):
-        cal = Calculator()
+        # Calculator.is_holiday = Mock()
+        # holi_new_yr = "2020-01-01"
+        # Calculator.return_value = True
+
         self.assertEqual(cal.is_holiday("2021-01-01"), True)
         self.assertEqual(cal.is_holiday("2021-01-02"), True)
 
@@ -123,8 +125,16 @@ class TestCalculator(unittest.TestCase):
 
     def test_get_sun_hour(self):
         cal = Calculator()
+        # mock = Mock()
+        # mock.return_value = {
+        #     "postcode": "3800",
+        #     "date":"01-01-2020",
+        # }
+
+        #attr = {'method.get_sunlight_hours': 8.8, 'something.'}
         self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"),8.8)
         self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"),0.9)
+        
 
     def test_get_day_light_length(self):
         cal = Calculator()
@@ -137,6 +147,15 @@ class TestCalculator(unittest.TestCase):
         self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"),None)
 
         #self.assertEqual(cal.get_cloud_cover("3830", "30-04-2021"),"")
+
+
+
+
+
+
+
+
+
 
     # you may create test suite if needed
     if __name__ == "__main__":
