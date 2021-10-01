@@ -10,6 +10,7 @@ build:
   script:
     - echo "Building"
     - pip install --upgrade pip
+    - pip install requests
     - python3 app/calculator.py
     - python3 app/calculator_form.py
 
