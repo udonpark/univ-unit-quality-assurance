@@ -67,6 +67,13 @@ class TestCase(unittest.TestCase):
     def test_validateInitialCharge(self):
         #checking whether it raises error or not
 
+        with self.request(method='POST', data={'InitialCharge': "40"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_InitialCharge(f.InitialCharge)
+            except ValueError as val:
+                assert False, "Should not raise exception"
+
         with self.request(method='POST', data={'InitialCharge': None}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
@@ -77,11 +84,23 @@ class TestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 f.validate_InitialCharge(f.InitialCharge)
 
-        with self.request(method='POST', data={'InitialCharge': "-90"}):
+        with self.request(method='POST', data={'InitialCharge': "test"}):
 
             f1 = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
                 f1.validate_InitialCharge(f1.InitialCharge)
+
+        with self.request(method='POST', data={'InitialCharge': "0"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_InitialCharge(f.InitialCharge)
+            except ValueError as val:
+                assert False, "Should not raise exception"
+
+        with self.request(method='POST', data={'InitialCharge': "101"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_InitialCharge(f.InitialCharge)
 
         with self.request(method='POST', data={'InitialCharge': "-1"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
@@ -90,23 +109,41 @@ class TestCase(unittest.TestCase):
 
     def test_validateFinalCharge(self):
         #checking whether it raises error or not
+        with self.request(method='POST', data={'FinalCharge': "40"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_FinalCharge(f.FinalCharge)
+            except ValueError as val:
+                assert False, "Should not raise exception"
+
+        with self.request(method='POST', data={'FinalCharge': "0"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            try:
+                f.validate_FinalCharge(f.FinalCharge)
+            except ValueError as val:
+                assert False, "Should not raise exception"
 
         with self.request(method='POST', data={'FinalCharge': None}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
-                f.validate_InitialCharge(f.FinalCharge)
+                f.validate_FinalCharge(f.FinalCharge)
 
         with self.request(method='POST', data={'FinalCharge': ''}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
-                f.validate_FinalCharge(f.InitialCharge)
+                f.validate_FinalCharge(f.FinalCharge)
 
-        with self.request(method='POST', data={'FinalCharge': "-90"}):
+        with self.request(method='POST', data={'FinalCharge': "101"}):
             f1 = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
                 f1.validate_FinalCharge(f1.FinalCharge)
 
         with self.request(method='POST', data={'FinalCharge': "-1"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_InitialCharge(f.FinalCharge)
+
+        with self.request(method='POST', data={'FinalCharge': "non-numerical"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
                 f.validate_InitialCharge(f.FinalCharge)
