@@ -234,36 +234,6 @@ class Calculator():
         duration_hours = self.minus_time(start_time, end_time)
         return self.h_to_m(duration_hours), start_time, end_time
 
-    def get_api_request(self, request, postcode=None, location_id=None, start_date1=None):
-        base = 'http://118.138.246.158/api/v1/'
-        response=''
-        if postcode is not None:
-            return requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode)).json()
-        elif location_id is not None and start_date1 is not None:
-            return requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1).json()
-
-    def url_exists(url):
-        r = requests.get(url)
-        if r.status_code == 200:
-            return True
-
-        elif r.status_code == 404:
-            return False
-       
-       
-        """
-        location id
-        ('http://118.138.246.158/api/v1/
-        location?postcode=' + str(postcode)
-
-        sun hours
-         'http://118.138.246.158/api/v1/
-         weather?location=' + location_id + '&date=' + start_date1
-
-        """
-
-
-
     # to be acquired through API
     def get_cloud_cover(self, postcode, start_date, start_time):
 
@@ -399,3 +369,17 @@ class Calculator():
 
         # return total_energy if curious
         return cost
+
+    @property
+    def get(self):
+        try:
+            r = requests.get('http://118.138.246.158/api/v1/location=ab9f494f-f8a0-4c24-bd2e-2497b99f2258?postcode=3800', timeout=1)
+
+            if r.ok:
+                return r
+            else:
+                return None
+
+        except requests.exceptions.Timeout:
+            return "Bad Response"
+

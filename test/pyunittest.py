@@ -1,20 +1,8 @@
 import datetime
-
-from requests.api import get
-try:
-    from app.calculator import *
-except ImportError:
-    # fix import issues
-    # ref: https://stackoverflow.com/questions/54339118/python3-x-modulenotfounderror-when-import-file-from-parent-directory/54340672
-    import sys
-    sys.path.append(sys.path[0] + "/..")
-    from app.calculator import *
     
 from app.calculator import *
 
 import unittest
-from unittest.mock import Mock
-from mock import patch
 class TestCalculator(unittest.TestCase):
 
     # you may create more test methods
@@ -161,30 +149,6 @@ class TestCalculator(unittest.TestCase):
 
         self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"), None)
         self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"), None)
-   
-
-    def test_get_api_request(self):
-        with patch.object(requests, 'get') as get_mock:
-            get_mock.return_value= mock_response = Mock()
-            mock_response.status_c
-            assert get_api_request() == 200
-
-
-
-    # def test_sunhourmock(self):
-    #     with patch.object(requests, 'get') as get_mock:
-    #         # get_mock.return_value = json.loads(json.dumps({"sunHours": [6.1]}))
-    #         get_mock.return_value = json.loads({"sunHours": [6.1]})
-    #         # get_mock.return_value = mock_response = Mock()
-    #         # mock_response.return_value =
-    #         self.assertEqual(Calculator().get_sun_hour("3800", "01-02-2020"), 6.1)
-
-
-
-    # you may create test suite if needed
-    if __name__ == "__main__":
-        pass
-
 
 def main():
     suit = unittest.TestLoader().loadTestsFromTestCase(TestCalculator)
