@@ -4,6 +4,8 @@ stages:
 
 build:
   stage: build
+  tags:
+    - fit2107-runner
   image: python:3.8-alpine
   script:
     - echo "Building"
@@ -16,4 +18,4 @@ test:
   script:
     - echo "Testing"
     - pip3 install --upgrade pip
-    - python3 -m unittest test.pyunittest
+    - python3 -m calculator_form_test test.calculator_form_test

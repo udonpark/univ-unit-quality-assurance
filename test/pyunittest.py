@@ -102,10 +102,11 @@ class TestCalculator(unittest.TestCase):
         cal=Calculator()
         #self.assertEqual(cal.solar_energy_aux("01-01-2020", "21:00", "3800", 80, 20, 80, 350),([], [], '19:45') )
         self.assertEqual(cal.solar_energy_aux("01-01-2020", "12:00", "3800", 80, 20, 80, 350),([0.05966101694915255], ['12:00', '13:00'], '13:30') )
-        self.assertEqual(cal.solar_energy_aux("01-01-2020", "23:00", "3800", 80, 20, 80, 350),([], [], '19:45:00')) 
-   
-   
-   #MOCKING for api functions
+        self.assertEqual(cal.solar_energy_aux("01-01-2020", "23:00", "3800", 80, 20, 80, 350),([], [], '19:45'))
+
+    def calculate_solar_energy(self):
+        pass
+    # MOCKING for api functions
     def test_get_sun_hour(self):
         pass
 
