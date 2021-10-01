@@ -1,7 +1,8 @@
+import flask_wtf
 from flask_wtf import FlaskForm
 from wtforms import StringField, DateField, TimeField
 from wtforms.validators import DataRequired, ValidationError, Optional
-
+import datetime 
 # validation for form inputs
 class Calculator_Form(FlaskForm):
     # this variable name needs to match with the input attribute name in the html file
@@ -21,11 +22,11 @@ class Calculator_Form(FlaskForm):
             raise ValidationError('Field data is none')
         elif field.data == '':
             raise ValueError("cannot fetch data")
-        try:  # raise exception when it is non-numeric
+        try:
             float_data = float(field.data)
         except ValueError:
             raise ValueError("Field data must be a numeric value")
-        if float_data <= 0:
+        if float(field.data) <= 0:
             raise ValueError("Field data must be a positive value")
 
     # validate initial charge here
@@ -45,8 +46,8 @@ class Calculator_Form(FlaskForm):
             raise ValueError("Field data must be >= 0")
         elif int_data > 100:
             raise ValueError("Field data must be <= 100")
-        elif field.data > self.FinalCharge.data:
-            raise ValueError("Initial charge data error")
+        # elif field.data > self.FinalCharge.data:
+        #     raise ValueError("Initial charge data error")
 
     # validate final charge here
     def validate_FinalCharge(self, field):
@@ -63,18 +64,73 @@ class Calculator_Form(FlaskForm):
         elif int_data > 100:
             raise ValueError("Field data must be <= 100")
 
+
     # validate start date here
     def validate_StartDate(self, field):
-        pass
+        if field.data is None or "":
+            raise ValidationError("Field data is empty or None")
+        current_date=datetime.date.today()
+        min_date=datetime.date(2008,7,1)
+        # if field.data > current_date:
+        #     raise ValidationError("Input date cannot be greater than today")
+        if field.data < min_date:
+            raise ValidationError("Input date cannot be before July 1st 2008")
 
     # validate start time here
+    #taskkill /f /im python.exe
     def validate_StartTime(self, field):
-        pass
+        if field.data is None or "":
+            raise ValidationError("Field data is empty or None")
+        hours= field.data.hour
+        minute=field.data.minute
+        if hours>23 or hours<0:
+            raise ValidationError("Invalid hour")
+        if minute>59 or minute<0:
+            raise ValidationError("Invalid minutes")
 
     # validate charger configuration here
     def validate_ChargerConfiguration(self, field):
-        pass
+        if field.data is None or "":
+            raise ValidationError("Field data is empty or None")
+        try:
+            int_data = int(field.data)
+        except ValueError:
+            raise ValueError("Incorrect configuration has been entered")
+        if int_data < 0 or int_data > 9:
+            raise ValueError("Configuration needs to be between 0 and 9")
+
 
     # validate postcode here
     def validate_PostCode(self, field):
-        pass
+        if field.data is None:
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
+
+        #List of postcodes
+        postcode_ranges = [range(1000, 2000), range(2000, 2600), range(2619, 2900),
+                           range(2921, 3000), range(2600, 2619), range(2900, 2921),
+                           range(3000, 4000), range(8000, 9000), range(4000, 5000),
+                           range(9000, 10000), range(5000, 5800), range(5800, 6000),
+                           range(6000, 6798), range(6800, 7000), range(7000, 7800),
+                           range(7800, 8000)]
+
+        # or (str(int_data[0:2]) == "02" and len(str(int_data)) == 4)
+        try:
+            int_data = int(field.data)
+        except ValueError:
+            raise ValueError("Incorrect configuration has been entered")
+
+        if not (int_data in range(1000, 2000) or int_data in range(2000, 2600) or int_data in range(2619, 2900)
+        or int_data in range(1000, 2000) or int_data in range(2000, 2600) or int_data in range(2619, 2900)
+        or int_data in range(2921, 3000) or int_data in range(2600, 2619) or int_data in range(2900, 2921)
+        or int_data in range(3000, 4000) or int_data in range(8000, 9000) or int_data in range(4000, 5000)
+        or int_data in range(9000, 10000) or int_data in range(5000, 5800) or int_data in range(5800, 6000)
+        or int_data in range(6000, 6798) or int_data in range(6800, 7000) or int_data in range(7000, 7800)
+        or int_data in range(7800, 8000)
+        or (field.data[0:2] == "02" and len(field.data) == 4)
+        or (field.data[0:2] == "08" and len(field.data) == 4)
+        or (field.data[0:2] == "09" and len(field.data == 4))):
+
+            raise ValueError("Incorrect postcode entered")
+
