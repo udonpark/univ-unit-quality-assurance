@@ -56,7 +56,7 @@ class Calculator():
 
     def charge_time(self, final_state, initial_state, capacity, power):
         minutes = math.ceil(
-            ((final_state - initial_state) / 100 * capacity / power) * 60)  # convert to minutes from hrs
+            ((int(final_state) - int(initial_state)) / 100 * int(capacity) / float(power)) * 60)  # convert to minutes from hrs
         # hour=0
         # if minute>59:
         #     hour=minute//60

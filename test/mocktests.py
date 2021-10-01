@@ -70,6 +70,11 @@ class TestApi(unittest.TestCase):
 
             assert Calculator().get.postcode == '3800'
 
+def main():
+    suit = unittest.TestLoader().loadTestsFromTestCase(TestApi)
+    unittest.TextTestRunner(verbosity=2).run(suit)
+
+main()
 
 
 

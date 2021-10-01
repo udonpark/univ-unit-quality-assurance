@@ -251,5 +251,8 @@ class TestCase(unittest.TestCase):
                 f.validate_StartTime(f.StartTime)
 
 
-if __name__ == '__main__':
-    unittest.main()
+def main():
+    suit = unittest.TestLoader().loadTestsFromTestCase(TestCase)
+    unittest.TextTestRunner(verbosity=2).run(suit)
+
+main()
