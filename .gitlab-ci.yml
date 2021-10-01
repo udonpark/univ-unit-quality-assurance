@@ -11,6 +11,7 @@ build:
     - echo "Building"
     - pip install --upgrade pip
     - pip install requests
+    - pip install workalender
     - python3 app/calculator.py
     - python3 app/calculator_form.py
 
