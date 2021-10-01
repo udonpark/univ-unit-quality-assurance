@@ -32,9 +32,9 @@ def operation_result():
         location_name = request.form["Location"]
 
         # you may change the logic as your like
-        duration = calculator.get_duration(start_time)
+        duration = calculator.charge_time(start_time)
 
-        is_peak = calculator.is_peak()
+        is_peak = calculator.is_peak(start_time)
 
         if is_peak:
             peak_period = calculator.peak_period(start_date)

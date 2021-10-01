@@ -4,6 +4,7 @@ from unittest.mock import patch, Mock
 from app.calculator import Calculator
 import requests
 
+
 class TestApi(unittest.TestCase):
 
     def test_weatherApi_StatusCode(self):
@@ -15,7 +16,7 @@ class TestApi(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    #Alternative code performing the same functionality
+    # Alternative code performing the same functionality
     def test_weatherApi_StatusCode1(self):
         with patch.object(requests, 'get') as get_mock:
             get_mock.return_value = mock_response = Mock()
@@ -34,7 +35,7 @@ class TestApi(unittest.TestCase):
         with patch('app.calculator.requests.get') as mock_get:
             mock_get.return_value.json.return_value = fake_json
 
-            #make the actual response to the api
+            # make the actual response to the api
             obj = Calculator()
             response = obj.get
 
@@ -54,7 +55,7 @@ class TestApi(unittest.TestCase):
         with patch('app.calculator.requests.get') as mock_get:
             mock_get.return_value.json.return_value = fake_json
 
-            #make the actual response to the api
+            # make the actual response to the api
             obj = Calculator()
             response = obj.get
 
@@ -70,16 +71,10 @@ class TestApi(unittest.TestCase):
 
             assert Calculator().get.postcode == '3800'
 
+
 def main():
     suit = unittest.TestLoader().loadTestsFromTestCase(TestApi)
     unittest.TextTestRunner(verbosity=2).run(suit)
 
+
 main()
-
-
-
-
-
-
-
-

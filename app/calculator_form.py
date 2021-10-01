@@ -77,6 +77,7 @@ class Calculator_Form(FlaskForm):
         elif field.data < min_date:
             raise ValidationError("Input date cannot be before July 1st 2008")
 
+
     # validate start time here
     #taskkill /f /im python.exe
     def validate_StartTime(self, field):
