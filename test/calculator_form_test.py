@@ -250,6 +250,13 @@ class TestCase(unittest.TestCase):
             with self.assertRaises(ValidationError):
                 f.validate_StartTime(f.StartTime)
 
+    def test_validateLocation(self):
+        with self.request(method='POST', data={'Location': ""}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValueError):
+                f.validate_Location(f.Location)
+
+
 
 def main():
     suit = unittest.TestLoader().loadTestsFromTestCase(TestCase)

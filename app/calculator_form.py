@@ -14,6 +14,7 @@ class Calculator_Form(FlaskForm):
     StartTime = TimeField("Start Time", [DataRequired("Data is missing or format is incorrect")], format='%H:%M')
     ChargerConfiguration = StringField("Charger Configuration", [DataRequired()])
     PostCode = StringField("Post Code", [DataRequired()])
+    Location = StringField("Location", [DataRequired()])
 
     # use validate_ + field_name to activate the flask-wtforms built-in validator
     # this is an example for you
@@ -133,4 +134,11 @@ class Calculator_Form(FlaskForm):
         or (field.data[0:2] == "09" and len(field.data == 4))):
 
             raise ValueError("Incorrect postcode entered")
+
+    def validate_Location(self, field):
+        if field.data is None:
+            raise ValidationError('Field data is none')
+        elif field.data == '':
+            raise ValueError("cannot fetch data")
+
 
