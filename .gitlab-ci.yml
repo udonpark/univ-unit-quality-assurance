@@ -10,6 +10,7 @@ build:
   script:
     - echo "Building"
     - pip install --upgrade pip
+    - pip install backports.zoneinfo
     - pip install -r requirements.txt
     - python3 app/calculator.py
 
