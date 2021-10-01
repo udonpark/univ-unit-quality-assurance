@@ -69,9 +69,9 @@ class TestCalculator(unittest.TestCase):
 
     def test_add_time(self):
         cal=Calculator()
-        self.assertEqual(cal.add_time("05:01", "05:59"), "11:0")
+        self.assertEqual(cal.add_time("05:01", "05:59"), "11:00")
         self.assertEqual(cal.add_time("05:00", "00:30"), "5:30")
-        self.assertEqual(cal.add_time("05:01", "05:59"), "11:0")
+        self.assertEqual(cal.add_time("05:01", "05:59"), "11:00")
         self.assertEqual(cal.add_time("05:00", "05:20"), "10:20")
 
     def test_minus_time(self):
