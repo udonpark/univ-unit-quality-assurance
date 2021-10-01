@@ -10,7 +10,8 @@ build:
   script:
     - echo "Building"
     - pip install --upgrade pip
-    - pip install pep517 
+    - python -m pip install --upgrade pip
+    - python -m pip install --no-use-pep517 bcrypt
     - pip install -r requirements.txt
     - python3 app/calculator.py
     - python3 app/calculator_form.py
