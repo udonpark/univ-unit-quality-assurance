@@ -247,7 +247,8 @@ class Calculator():
         response_data = response.json()
 
         for a in response_data:
-            location_id += a['id']
+            location_id += a["id"]
+            break
 
         # for sun hours duration
         response1 = requests.get('http://118.138.246.158/api/v1/weather?location=' + location_id + '&date=' + start_date1)
@@ -255,10 +256,13 @@ class Calculator():
         hour = response_data1['hourlyWeatherHistory']
 
         start_time1 = start_time.split(":")
+        time = start_time1[0]
+
         #here we get the cloud cover for the specific time
         for b in hour:
-            if b["hour"] == start_time1[0]:
+            if b["hour"] == int(time):
                 return b["cloudCoverPct"] #the cloud cover
+
 
     def solar_energy_aux(self, start_date, start_time, post_code, final_state, initial_state, capacity, power):
         si = self.get_sun_hour(post_code, start_date)
