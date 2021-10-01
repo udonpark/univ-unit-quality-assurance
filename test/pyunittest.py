@@ -39,8 +39,9 @@ class TestCalculator(unittest.TestCase):
         # Calculator.return_value = True
 
         cal=Calculator()
-        self.assertEqual(cal.is_holiday("2021-01-01"), True)
-        self.assertEqual(cal.is_holiday("2021-01-02"), True)
+        self.assertEqual(cal.is_holiday("01/01/2021"), True)
+        self.assertEqual(cal.is_holiday("01/01/2021"), True)
+        self.assertEqual(cal.is_holiday("01/01/2021"), True)
 
 
     def test_chargetime(self):
@@ -49,7 +50,7 @@ class TestCalculator(unittest.TestCase):
 
     def test_inc_time(self):
         cal=Calculator()
-        test_time=datetime.datetime.strptime("2021-01-02", "%Y-%m-%d")
+        test_time=datetime.datetime.strptime("01/01/2021", "%Y-%m-%d")
         ref=test_time+ datetime.timedelta(minutes=1)
         self.assertEqual(cal.inc_time(test_time), ref)
 
@@ -60,11 +61,11 @@ class TestCalculator(unittest.TestCase):
 
     def test_cal_cost(self):
         cal=Calculator()
-        self.assertEqual(cal.cal_cost(8,50,"18:01", "2021-01-01", 350), 12.83333333333333 )
-        self.assertEqual(cal.cal_cost(8,50,"18:00","2021-01-01", 350 ),14.437499999999996 )
-        self.assertEqual(cal.cal_cost(8,50,"06:00","2021-01-01",  350),25.66666666666666 )
-        self.assertEqual(cal.cal_cost(8,50,"05:59","2021-01-01",  350), 24.062499999999993)
-        self.assertEqual(cal.cal_cost(8,50,"23:59","2021-01-02",  350), 12.83333333333333)
+        self.assertEqual(cal.cal_cost(8,50,"18:01", "01/01/2021", 350), 12.83333333333333 )
+        self.assertEqual(cal.cal_cost(8,50,"18:00","01/01/2021", 350 ),14.437499999999996 )
+        self.assertEqual(cal.cal_cost(8,50,"06:00","01/01/2021",  350),25.66666666666666 )
+        self.assertEqual(cal.cal_cost(8,50,"05:59","01/01/2021",  350), 24.062499999999993)
+        self.assertEqual(cal.cal_cost(8,50,"23:59","01/01/2021",  350), 12.83333333333333)
 
     def test_add_time(self):
         cal=Calculator()
