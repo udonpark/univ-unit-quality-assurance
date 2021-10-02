@@ -10,6 +10,8 @@ import math
 
 class Calculator():
     country = Australia()
+
+    #we use a dictionary to store all the configuration options and there corresponding power and base price
     configuration = {"1": {"power": 2,
                            "base": 5},
                      "2": {"power": 3.6,
@@ -31,12 +33,15 @@ class Calculator():
     def __init__(self):
         pass
 
+    #retreive the power from the entered configuration
     def get_power(self, config):
         return self.configuration[str(config)]["power"]
 
+    #retreive the base price from the entered configuration
     def get_base_price(self, config):
         return self.configuration[str(config)]["base"]
 
+    #This function checks whether the current time is peak time or not
     def is_peak(self, time):
         # assuming that the time is in 24 hr format
         ti=time
@@ -44,6 +49,7 @@ class Calculator():
             ti = datetime.datetime.strptime(time, "%H:%M")
         return ti >= datetime.datetime.strptime("06:00", "%H:%M") and ti <= datetime.datetime.strptime("18:00", "%H:%M")
 
+    #This function is used to check whether the date entered by the user is a holiday or not
     def is_holiday(self, start_date):
         # use the workalender module and weekends
         # start date is a string
@@ -55,21 +61,25 @@ class Calculator():
         return (not cal.is_working_day(date_str)) or date_str.weekday() > 4
 
     def charge_time(self, final_state, initial_state, capacity, power):
+        """
+        This function checks the amount of time taken for the car to charge given a initial and final state
+        """
         minutes = math.ceil(
             ((int(final_state) - int(initial_state)) / 100 * int(capacity) / float(power)) * 60)  # convert to minutes from hrs
-        # hour=0
-        # if minute>59:
-        #     hour=minute//60
-        #     minute=minute%60
-        # charge_time=datetime.time(hours=hour ,minutes=minute)
         return minutes
 
     def inc_time(self, time):
+        """
+        This function is used to increment the time for cal_cost
+        """
         ti = time
         ti = datetime.timedelta(minutes=1) + ti
         return ti
 
     def cal_cost_per_min(self, power, base_price, surcharge, discount):
+        """
+        This function calculates the cost per minute of the car charging
+        """
         cost_per_min = (1 / 60 * power) * base_price / 100 * discount * surcharge
         return cost_per_min
 
@@ -77,6 +87,8 @@ class Calculator():
         """
         cost= time (in hrs) * power (kwh) * (cost in dollars) c/kwh
         cost/min when time = 1/60
+        This function calculates the charging cost WITHOUT factoring in solar energy. It checks for the peak time
+        as well as whether its a holiday or not
         """
         cost = 0
         surcharge = 1
@@ -98,29 +110,19 @@ class Calculator():
             date = self.inc_time(date)
         return cost
 
-    # def total_cost(self):
-    #     base_price=self.charger.get_base_price(self.configuration)
-    #     power=self.charger.get_power(self.configuration)
-    #     charge_time=self.charge_time(self.finalstate, self.initialstate, float(power))
-    #     self.cost=self.cal_cost(charge_time, base_price, self.starttime, self.startdate)
 
-    # def total_cal(self):
-    #     self.duration = self.charge_time(self.finalstate, self.initialstate, self.capacity, self.power)
-    #     self.cost = self.cal_cost(self.duration, self.base_price, self.starttime, self.startdate, self.power)
-
-
-
-    # to be acquired through API
     def get_sun_hour(self, postcode, start_date):
+        """
+        This function uses the given Weather API to retrieve the sun hour(aka solar insolation) accroding to the postcode
+        and the date.
+        """
         location_id = ""
-        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+
+        #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
         start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
         ref = datetime.date.today().year
         reference_date = ""
-        # y = start_date[2]
-        # while str(y) > str(ref):
-        #     int(y
 
         # year_date = start_date[2]
         if int(start_date1[2]) > datetime.datetime.today().year:
@@ -130,7 +132,7 @@ class Calculator():
                 start_date[2] = datetime.datetime.today().year
 
         start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
-        # 2024-8-1, 2021-8-1. 2024-11-1, 2021-11-1
+
         # for the location id
         response = requests.get('http://118.138.246.158/api/v1/location?postcode='+str(postcode))
         response_data = response.json()
@@ -144,8 +146,11 @@ class Calculator():
         response_data1 = response1.json()
         return response_data1['sunHours'] #sunHours aka solar insolation
 
-    # to be acquired through API
     def get_day_light_length(self, postcode, start_date):
+        """
+        This function uses the given Weather API to retrieve sunrise and sunset hours accroding to the postcode
+        and the date. Then we ue the difference of them to get the day light length
+        """
         location_id = ""
         # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
@@ -178,7 +183,10 @@ class Calculator():
 
         return hours_difference + (mins_difference/60)
 
-    def add_time(self, time1, time2): 
+    def add_time(self, time1, time2):
+        """
+        This function is used to add two times which are in string format
+        """
         # add two times in string format. e.g., "10:30" + "4:40" -> "15:10"
         time1 = time1.split(":")
         time2 = time2.split(":")
@@ -189,6 +197,9 @@ class Calculator():
         return sum_hours
 
     def minus_time(self, start_time, end_time):
+        """
+        This function is used to subtract two times which are in string format
+        """
         # minus two times in string format. e.g., "10:30" - "4:40" -> "5:50"
         start_time = start_time.split(":")
         end_time = end_time.split(":")
@@ -208,11 +219,15 @@ class Calculator():
         hours = hours.split(":")
         return int(hours[0]) * 60 + int(hours[1])
 
-    # to be acquired through API --
     def get_solar_energy_duration(self, postcode, start_date, start_time, charging_length):
+        """
+        This function calculates the duration in which the car charges using solar energy
+        """
+
         # duration in which car charges while in day light
         location_id = ""
-        # start_date1 = str(start_date)[::-1]  # start date in reverse form as start date input is in reverse in the api
+
+        # start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
         start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
@@ -238,25 +253,27 @@ class Calculator():
         if len(sunset) == 8:
             sunset = sunset[:-3]
 
-        # print("start time="+start_time)
-        # print("end time="+ end_time)
         # make sure to calculate charging time during daylight hours
         if self.h_to_m(sunrise) > self.h_to_m(start_time):
             start_time = sunrise
 
         if self.h_to_m(sunset) < self.h_to_m(end_time):
             end_time = sunset
-        # print(end_time)
-        #end_time=end_time[:-3]
+
         # calculate and return duration time in minutes
         duration_hours = self.minus_time(start_time, end_time)
         return self.h_to_m(duration_hours), start_time, end_time
 
     # to be acquired through API
     def get_cloud_cover(self, postcode, start_date, start_time):
+        """
+        This function uses the given Weather API to retrieve hourly cloud cover accroding to the postcode
+        and the date.
+        """
 
         location_id = ""
-        # start_date1 = str(start_date)[::-1] #start date in reverse form as start date input is in reverse in the api
+
+        #start date in reverse form as start date input is in reverse in the api
         start_date = start_date.split("-")
         start_date1 = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
 
@@ -315,7 +332,8 @@ class Calculator():
             if cc is None:
                 generation_list.append(si * 1 / dl * (1 / 100) * 50 * 0.20 * duration / 60)
                 continue
-            generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60)
+            generation_list.append(si * 1 / dl * (1 - cc / 100) * 50 * 0.20 * duration / 60) #this list contains the
+            #solar energy between hours
 
         """
         7:20 -13:30
@@ -323,14 +341,18 @@ class Calculator():
         hours_list = [7:20, 8:00, 9:00, 10:00, 11:00, 12:00, 13:00, 13:20]
         """
         return generation_list, hours_list, et
-    #ko
+
     def calculate_solar_energy(self, inputdate, start_time, post_code, final_state, initial_state, capacity, power):
+        """
+        This calculates the solar energy for the three dates(aka the reference date and the two years behind it eg if 2022
+        charging date so this calculates for 2021 2020 2019
+        """
         ref = datetime.date.today().year
         reference_date = ""
         start_date = inputdate.split("-")
-        # year_date = start_date[2]
+
         inputdate = start_date[2] + "-" + start_date[1] + "-" + start_date[0]
-        # currentdate = datetime.datetime.today().year
+
         inputdate = datetime.datetime.strptime(inputdate, "%Y-%m-%d")
         if inputdate.year > ref:
             dates = str(inputdate).split(" ")[0].split("-", 1)
@@ -345,16 +367,15 @@ class Calculator():
             reference_date = str(str(inputdate).split(" ")[0])
         dates = str(inputdate).split(" ")[0].split("-", 1)
 
-        # new_date = datetime.datetime.strptime(reference_date, "%Y-%m-%d")
         temp_date = reference_date.split("-")
         reference_date = temp_date[2] + "-" + temp_date[1] + "-" + temp_date[0]
 
         list1 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
         hour_list = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
-        # reference_date = str(int(ref - 1)) + str(dates[0])
+
         reference_date = temp_date[2] + "-" + temp_date[1] + "-" + str(int(temp_date[0])-1)
         list2 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
-        # reference_date = str(int(temp_date[2])) + "-" + temp_date[1] + "-" + temp_date[0]
+
         reference_date = temp_date[2] + "-" + temp_date[1] + "-" + str(int(temp_date[0]) - 2)
         list3 = self.solar_energy_aux(reference_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
 
@@ -369,6 +390,9 @@ class Calculator():
     [energy1, energy2, energy3, energy4, energy5] <- mean_list
     """
     def calculate_charging_cost(self, start_date, start_time, post_code, final_state, initial_state, capacity, power, config):
+        """
+        This calculates the overall cost of charging the car. It takes into account all factors (upto ALG3)
+        """
         mean_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[0]
         hour_list = self.calculate_solar_energy(start_date, start_time, post_code, final_state, initial_state, capacity, power)[1]
         cost = 0
@@ -392,6 +416,8 @@ class Calculator():
         # return total_energy if curious
         return cost
 
+    #The function below is used to send a request to the Weather Api. This function's main usage is in mocktests.py where
+    #we carry out the mock testing using this api call
     @property
     def get(self):
         try:

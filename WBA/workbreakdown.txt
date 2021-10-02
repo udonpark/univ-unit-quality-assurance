@@ -1,2 +1,98 @@
 This is Work Breakdown Agreement by Coderss
 
+Note:The work was divided on the basis of the code contribution as to keep everyone's contribution fair and equal
+
+General WBA:
+Calculator.py implementation-Shariq, Jon, Yo
+Mock Testing-Shariq
+Calculator.py testing-Jon and Yo
+Calculator_form_test.py-Shariq and Yo
+Calculator_form.py implementation-Jon, Yo and Shariq
+
+Detailed WBA:
+
+Yo Kogure
+
+validate_BatteryPackCapacity() - Yo
+validate_InitialCharge() - Yo
+validate_FinalCharge() - Yo
+
+add_time() - Yo
+minus_time() - Yo
+m_to_h() - Yo
+h_to_m() - Yo
+solar_energy_aux() - Yo
+
+calculate_solar_energy() - Yo
+calculate_charging_cost() - Yo
+test_solar_energy_aux() - Yo
+test_calculate_solar_energy_aux() - Yo
+test_calculate_solar_energy() - Yo
+test_validateStartDate() - Yo
+test_validateStartTime() - Yo
+
+Shariq Nadeem Malik
+
+get_sun_hour() - Shariq
+get_day_light_length() - Shariq
+get_solar_energy_duration() - Shariq
+get_cloud_cover() - Shariq
+
+test_weatherApi_StatusCode() - Shariq
+test_weatherApi_StatusCode1() - Shariq
+test_weatherApi_ID() - Shariq
+test_weatherApi_name() - Shariq
+test_weatherApi_postcode() - Shariq
+
+validate_ChargerConfiguration() - Shariq
+validate_PostCode() - Shariq
+
+test_validateBatteryPack() - Shariq
+test_validateInitialCharge() - Shariq
+test_validateFinalCharge() - Shariq
+test_validateChargerConfiguration() - Shariq
+test_validatePostCode() - Shariq
+
+get() - Shariq
+
+
+Jonathan Yip
+
+validate_StartDate() - Jon
+validate_StartTime() - Jon
+
+Calculator.py
+get_power() - Jon
+get_base_price() - Jon
+is_peak() - Jon
+is_holiday() - Jon
+charge_time() - Jon
+inc_time() - Jon
+cal_cost_per_min() - Jon
+
+test_power() - Jon
+test_baseprice() - Jon
+test_is_peak() - Jon
+test_is_holiday() - Jon
+test_chargetime() - Jon
+test_inc_time() - Jon
+test_cal_cost_per_min() - Jon
+test_cal_cost() - Jon
+test_add_time() - Jon
+test_minus_time() - Jon
+test_add_time() - Jon
+test_mtoh() - Jon
+test_htm() - Jon
+
+test_get_sun_hour() - Jon
+test_get_day_light_length() - Jon
+test_get_cloud_cover() - Jon
+
+
+Others:
+Understanding Mock - Shariq, Jon, Yo
+Fixing yml files - Shariq
+Fixing main.py - Jon
+Preparing documentation framework - Yo
+
+

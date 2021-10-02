@@ -6,7 +6,14 @@ import requests
 
 class TestApi(unittest.TestCase):
 
+    """
+    In this class we carry out mocking of the Weather Api calls
+    """
+
     def test_weatherApi_StatusCode(self):
+        """
+        This function is used to check whether we recieve an appropriate status code from the mock api call response
+        """
         with patch('app.calculator.requests.get') as mock_get:
             mock_get.return_value.status_code = 200
 
@@ -24,6 +31,9 @@ class TestApi(unittest.TestCase):
             assert Calculator().get.status_code == 200
 
     def test_weatherApi_ID(self):
+        """
+        This function is used to check whether the api call correctly gets the mocked value
+        """
         fake_json = [{'id': 'ab9f494f-f8a0-4c24-bd2e-2497b99f2258', 'postcode': '3800',
                       'name': 'MONASH UNIVERSITY', 'state': 'VIC', 'latitude': '-37.9105599',
                       'longitude': '145.1362485', 'distanceToNearestWeatherStationMetres': 3771.993796218797,

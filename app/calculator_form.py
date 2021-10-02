@@ -17,6 +17,8 @@ class Calculator_Form(FlaskForm):
 
     # use validate_ + field_name to activate the flask-wtforms built-in validator
     # this is an example for you
+
+    #validating BatteryPackCapacity
     def validate_BatteryPackCapacity(self, field):
         if field.data is None:
             raise ValidationError('Field data is none')
@@ -77,7 +79,6 @@ class Calculator_Form(FlaskForm):
             raise ValidationError("Input date cannot be before July 1st 2008")
 
     # validate start time here
-    #taskkill /f /im python.exe
     def validate_StartTime(self, field):
         if field.data is None or "":
             raise ValidationError("Field data is empty or None")
@@ -107,15 +108,6 @@ class Calculator_Form(FlaskForm):
         elif field.data == '':
             raise ValueError("cannot fetch data")
 
-        #List of postcodes
-        postcode_ranges = [range(1000, 2000), range(2000, 2600), range(2619, 2900),
-                           range(2921, 3000), range(2600, 2619), range(2900, 2921),
-                           range(3000, 4000), range(8000, 9000), range(4000, 5000),
-                           range(9000, 10000), range(5000, 5800), range(5800, 6000),
-                           range(6000, 6798), range(6800, 7000), range(7000, 7800),
-                           range(7800, 8000)]
-
-        # or (str(int_data[0:2]) == "02" and len(str(int_data)) == 4)
         try:
             int_data = int(field.data)
         except ValueError:

@@ -12,6 +12,9 @@ teststring = ""
 
 
 class TestCase(unittest.TestCase):
+    """
+    This class is used to test the validate functions of the calculator_form.py file
+    """
     def setUp(self):
         self.app = self.create_app()
         self.client = self.app.test_client()
@@ -30,6 +33,10 @@ class TestCase(unittest.TestCase):
         return self.app.test_request_context(*args, **kwargs)
 
     def test_validateBatteryPack(self):
+        """
+        This function tests for the validateBatteryPack function
+        We use a variety of inputs to ensure that we cover every if statement in the validateBatteryPack function
+        """
         #checking whether it raises error or not
 
         with self.request(method='POST', data={'BatteryPackCapacity': "45"}):
@@ -54,10 +61,6 @@ class TestCase(unittest.TestCase):
             with self.assertRaises(ValueError):
                 f.validate_BatteryPackCapacity(f.BatteryPackCapacity)
 
-        with self.request(method='POST', data={'BatteryPackCapacity': "test"}):
-            f = cal.Calculator_Form(request.form, data={'csrf': False})
-            with self.assertRaises(ValueError):
-                f.validate_BatteryPackCapacity(f.BatteryPackCapacity)
 
         with self.request(method='POST', data={'BatteryPackCapacity': ""}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
@@ -65,6 +68,10 @@ class TestCase(unittest.TestCase):
                 f.validate_BatteryPackCapacity(f.BatteryPackCapacity)
 
     def test_validateInitialCharge(self):
+        """
+        This function tests for the validateInitialCharge function
+        We use a variety of inputs to ensure that we cover every if statement in the validateInitialCharge function
+        """
         #checking whether it raises error or not
 
         with self.request(method='POST', data={'InitialCharge': "40"}):
@@ -108,6 +115,10 @@ class TestCase(unittest.TestCase):
                 f.validate_InitialCharge(f.InitialCharge)
 
     def test_validateFinalCharge(self):
+        """
+        This function tests for the validateFinalCharge function
+        We use a variety of inputs to ensure that we cover every if statement in the validateFinalCharge function
+        """
         #checking whether it raises error or not
         with self.request(method='POST', data={'FinalCharge': "40"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
@@ -149,6 +160,10 @@ class TestCase(unittest.TestCase):
                 f.validate_InitialCharge(f.FinalCharge)
 
     def test_validateChargerConfiguration(self):
+        """
+        This function tests for the validateChargerConfiguration function
+        Note:we use boundary value testing to make sure that no inputs outside the boundary are accepted
+        """
         with self.request(method='POST', data={'ChargerConfiguration': None}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             with self.assertRaises(ValueError):
@@ -177,6 +192,9 @@ class TestCase(unittest.TestCase):
                 assert False, "Should not raise exception"
 
     def test_validatePostcode(self):
+        """
+        This function tests for the validatePostCode function
+        """
         with self.request(method='POST', data={'PostCode': "3800"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             try:
@@ -195,6 +213,9 @@ class TestCase(unittest.TestCase):
                 f.validate_PostCode(f.PostCode)
 
     def test_validateStartDate(self):
+        """
+        This function tests for the validateStartDate function
+        """
         with self.request(method='POST', data={'StartDate': "23/02/2020"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             try:
@@ -218,6 +239,9 @@ class TestCase(unittest.TestCase):
                 f.validate_StartDate(f.StartDate)
 
     def test_validateStartTime(self):
+        """
+        This function tests for the validateStartTime function
+        """
         with self.request(method='POST', data={'StartTime': "23:50"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             try:
