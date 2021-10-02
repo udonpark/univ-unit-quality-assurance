@@ -1,6 +1,14 @@
-import datetime
+# import datetime
     
-from app.calculator import *
+# from app.calculator import *
+try:
+    from app.calculator import *
+except ImportError:
+    # fix import issues
+    # ref: https://stackoverflow.com/questions/54339118/python3-x-modulenotfounderror-when-import-file-from-parent-directory/54340672
+    import sys
+    sys.path.append(sys.path[0] + "/..")
+    from app.calculator import *
 
 import unittest
 class TestCalculator(unittest.TestCase):
@@ -40,8 +48,8 @@ class TestCalculator(unittest.TestCase):
 
         cal=Calculator()
         self.assertEqual(cal.is_holiday("01/01/2021"), True)
-        self.assertEqual(cal.is_holiday("01/01/2021"), True)
-        self.assertEqual(cal.is_holiday("01/01/2021"), True)
+        self.assertEqual(cal.is_holiday("02/01/2021"), True)
+        self.assertEqual(cal.is_holiday("09/01/2021"), True)
 
 
     def test_chargetime(self):
@@ -58,32 +66,34 @@ class TestCalculator(unittest.TestCase):
         cal=Calculator()
         self.assertEqual(cal.cal_cost_per_min(350,5,1.1,0.5),0.16041666666666665)
 
-
+    #CHANGES
     def test_cal_cost(self):
         cal=Calculator()
         self.assertEqual(cal.cal_cost(8,50,"18:01", "01-01-2021", 350), 12.83333333333333 )
         self.assertEqual(cal.cal_cost(8,50,"18:00","01-01-2021", 350 ),14.437499999999996 )
-        self.assertEqual(cal.cal_cost(8,50,"06:00","01-01-2021",  350),25.66666666666666 )
-        self.assertEqual(cal.cal_cost(8,50,"05:59","01-01-2021",  350), 24.062499999999993)
-        self.assertEqual(cal.cal_cost(8,50,"23:59","01-01-2021",  350), 12.83333333333333)
+        self.assertEqual(cal.cal_cost(8,50,"01:00","12-01-2021",  350),11.666666666666664  )
+        self.assertEqual(cal.cal_cost(8,50,"15:30","12-01-2021",  350), 23.33333333333333)
 
+    #CHANGES
     def test_add_time(self):
         cal=Calculator()
         self.assertEqual(cal.add_time("05:01", "05:59"), "11:00")
         self.assertEqual(cal.add_time("05:00", "00:30"), "5:30")
-        self.assertEqual(cal.add_time("05:01", "05:59"), "11:00")
-        self.assertEqual(cal.add_time("05:00", "05:20"), "10:20")
+        self.assertEqual(cal.add_time("05:00", "05:00"), "10:00")
 
+    #CHANGES MADE
     def test_minus_time(self):
         cal=Calculator()
-        self.assertEqual(cal.minus_time("05:00", "05:20"), "0:20")
+        self.assertEqual(cal.minus_time("01:20", "05:30"), "4:10")
+        self.assertEqual(cal.minus_time("00:30", "05:00"), "4:30")
+        self.assertEqual(cal.minus_time("03:10", "05:00"), "1:50")
 
-
+    #CHANGES MADE
     def test_mtoh(self):
         cal=Calculator()
         self.assertEqual(cal.m_to_h(150), "2:30")
-        self.assertEqual(cal.m_to_h(250), "4:10")
-        self.assertEqual(cal.m_to_h(0), "0:00")
+        self.assertEqual(cal.m_to_h(120), "2:00")
+        self.assertEqual(cal.m_to_h(30), "0:30")
         with self.assertRaises(TypeError):
             cal.m_to_h("a")
     
@@ -118,24 +128,18 @@ class TestCalculator(unittest.TestCase):
 
     def test_get_sun_hour(self):
         cal = Calculator()
-        # mock = Mock()
-        # mock.return_value = {
-        #     "postcode": "3800",
-        #     "date":"01-01-2020",
-        # }
-
-        #attr = {'method.get_sunlight_hours': 8.8, 'something.'}
         self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"),8.8)
         self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"),0.9)
+        
 
     def test_get_day_light_length(self):
         cal = Calculator()
         self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
-    #     self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
+        self.assertEqual(cal.get_day_light_length("3800", "01-05-2021"), 10.533333333333333)
 
     def test_get_cloud_cover(self):
         cal = Calculator()
-        self.assertEqual(cal.get_cloud_cover("2620", "30-04-2021", "08:00"),19)
+        self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"),9)
         self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"),71)
 
 def main():
