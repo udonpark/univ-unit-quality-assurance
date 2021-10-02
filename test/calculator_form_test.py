@@ -238,6 +238,11 @@ class TestCase(unittest.TestCase):
             with self.assertRaises(ValidationError):
                 f.validate_StartDate(f.StartDate)
 
+        with self.request(method='POST', data={'StartDate': "2008-06-29"}):
+            f = cal.Calculator_Form(request.form, data={'csrf': False})
+            with self.assertRaises(ValidationError):
+                f.validate_StartDate(f.StartDate)
+
     def test_validateStartTime(self):
         """
         This function tests for the validateStartTime function
