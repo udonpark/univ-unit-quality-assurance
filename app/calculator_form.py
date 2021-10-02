@@ -71,9 +71,9 @@ class Calculator_Form(FlaskForm):
             raise ValidationError("Field data is empty or None")
         current_date=datetime.date.today()
         min_date=datetime.date(2008,7,1)
-        if field.data > current_date:
-            raise ValidationError("Input date cannot be greater than today")
-        elif field.data < min_date:
+        # if field.data > current_date:
+        #     raise ValidationError("Input date cannot be greater than today")
+        if field.data < min_date:
             raise ValidationError("Input date cannot be before July 1st 2008")
 
     # validate start time here
