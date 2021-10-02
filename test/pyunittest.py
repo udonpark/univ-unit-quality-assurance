@@ -1,14 +1,4 @@
-# import datetime
-    
-# from app.calculator import *
-try:
-    from app.calculator import *
-except ImportError:
-    # fix import issues
-    # ref: https://stackoverflow.com/questions/54339118/python3-x-modulenotfounderror-when-import-file-from-parent-directory/54340672
-    import sys
-    sys.path.append(sys.path[0] + "/..")
-    from app.calculator import *
+from app.calculator import *
 
 import unittest
 class TestCalculator(unittest.TestCase):
@@ -34,17 +24,13 @@ class TestCalculator(unittest.TestCase):
 
     def test_ispeak(self):
         cal=Calculator()
-        # mock = Mock()
-        # attrs = {'method.return_value':"05:59", ''}
+
         self.assertEqual(cal.is_peak("05:59"),False)
         self.assertEqual(cal.is_peak("06:00"),True)
         self.assertEqual(cal.is_peak("18:00"),True)
         self.assertEqual(cal.is_peak("18:01"),False)
 
     def test_is_holiday(self):
-        # Calculator.is_holiday = Mock()
-        # holi_new_yr = "2020-01-01"
-        # Calculator.return_value = True
 
         cal=Calculator()
         self.assertEqual(cal.is_holiday("01/01/2021"), True)
