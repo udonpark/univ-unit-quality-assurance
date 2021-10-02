@@ -40,7 +40,6 @@ class TestCase(unittest.TestCase):
         #checking whether it raises error or not
 
         #test1
-
         with self.request(method='POST', data={'BatteryPackCapacity': "45"}):
             f = cal.Calculator_Form(request.form, data={'csrf': False})
             try:
