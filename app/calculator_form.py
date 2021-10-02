@@ -48,8 +48,8 @@ class Calculator_Form(FlaskForm):
             raise ValueError("Field data must be >= 0")
         elif int_data > 100:
             raise ValueError("Field data must be <= 100")
-        elif field.data > self.FinalCharge.data:
-            raise ValueError("Initial charge data error")
+        # elif field.data > self.FinalCharge.data:
+        #     raise ValueError("Initial charge data error")
 
     # validate final charge here
     def validate_FinalCharge(self, field):
