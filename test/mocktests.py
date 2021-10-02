@@ -54,6 +54,10 @@ class TestApi(unittest.TestCase):
             self.assertEqual(location, 'ab9f494f-f8a0-4c24-bd2e-2497b99f2258')
 
     def test_weatherApi_name(self):
+        """
+        This function is used to check whether the api call correctly gets the mocked value
+        """
+
         fake_json = [{'id': 'ab9f494f-f8a0-4c24-bd2e-2497b99f2258', 'postcode': '3800',
                       'name': 'MONASH UNIVERSITY', 'state': 'VIC', 'latitude': '-37.9105599',
                       'longitude': '145.1362485', 'distanceToNearestWeatherStationMetres': 3771.993796218797,
@@ -74,6 +78,10 @@ class TestApi(unittest.TestCase):
             self.assertEqual(location, 'MONASH UNIVERSITY')
 
     def test_weatherApi_postcode(self):
+        """
+        This function is used to check whether the api call correctly gets the mocked value
+        """
+
         with patch.object(requests, 'get') as get_mock:
             get_mock.return_value = mock_response = Mock()
             mock_response.postcode = '3800'
