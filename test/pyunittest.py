@@ -101,7 +101,7 @@ class TestCalculator(unittest.TestCase):
         cal=Calculator()
         self.assertEqual(cal.h_to_m("2:30"),150)
 
-
+    #need to test
     def test_solar_energy_aux(self):
         cal=Calculator()
         #self.assertEqual(cal.solar_energy_aux("01-01-2020", "21:00", "3800", 80, 20, 80, 350),([], [], '19:45') )
@@ -118,6 +118,7 @@ class TestCalculator(unittest.TestCase):
  ['12:40', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '18:09'],
  '18:09'))
 
+    #need to test
     def test_calculate_solar_energy(self):
         cal = Calculator()
         self.assertEqual(cal.calculate_solar_energy("04-06-2020", "12:00", "3800", 80, 20, 80, 350), ([1.6427586206896552, 0.8046551724137933], ['12:00', '13:00', '13:30']))
@@ -135,11 +136,11 @@ class TestCalculator(unittest.TestCase):
     def test_get_day_light_length(self):
         cal = Calculator()
         self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
-        self.assertEqual(cal.get_day_light_length("3800", "01-05-2021"), 10.566666666666666)
+        self.assertEqual(cal.get_day_light_length("3800", "01-05-2021"), 10.533333333333333)
 
     def test_get_cloud_cover(self):
         cal = Calculator()
-        self.assertEqual(cal.get_cloud_cover("2620", "30-04-2021", "08:00"),19)
+        self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"),19)
         self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"),71)
 
 def main():
