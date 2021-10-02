@@ -131,17 +131,22 @@ class TestCalculator(unittest.TestCase):
         cal = Calculator()
         self.assertEqual(cal.get_sun_hour("3800", "01-01-2020"),8.8)
         self.assertEqual(cal.get_sun_hour("3800", "01-02-2020"),0.9)
-        
+        self.assertEqual(cal.get_sun_hour("2620", "21-03-2021"),1.4)
+        self.assertEqual(cal.get_sun_hour("3300", "22-09-2019"),3.6)
 
     def test_get_day_light_length(self):
         cal = Calculator()
         self.assertEqual(cal.get_day_light_length("3800", "30-04-2021"), 10.566666666666666)
         self.assertEqual(cal.get_day_light_length("3800", "01-05-2021"), 10.533333333333333)
+        self.assertEqual(cal.get_day_light_length("2620", "17-05-2020"), 10.216666666666667)
+        self.assertEqual(cal.get_day_light_length("3300", "15-09-2020"),  11.85)
 
     def test_get_cloud_cover(self):
         cal = Calculator()
-        self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"),19)
+        self.assertEqual(cal.get_cloud_cover("3800", "30-04-2021", "08:00"),9)
         self.assertEqual(cal.get_cloud_cover("3800", "21-04-2021", "14:00"),71)
+        self.assertEqual(cal.get_cloud_cover("2620", "17-05-2020", "14:00"),1)
+        self.assertEqual(cal.get_cloud_cover("3300", "15-09-2020", "14:00"),44)
 
 def main():
     suit = unittest.TestLoader().loadTestsFromTestCase(TestCalculator)
